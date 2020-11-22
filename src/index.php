@@ -1,3 +1,7 @@
+<?php
+include '../db_scripts/Models/User.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
