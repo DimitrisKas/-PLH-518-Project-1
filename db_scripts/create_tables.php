@@ -1,6 +1,5 @@
 <?php 
 include 'db_connection.php';
-echo '';
 
 $conn = OpenCon(true);
 
@@ -10,7 +9,7 @@ $sql_str = "CREATE TABLE Users(
     SURNAME VARCHAR(20),
     USERNAME VARCHAR(20) NOT NULL,
     PASSWORD VARCHAR(20) NOT NULL,
-    EMAIL VARCHAR(50) NOT NULL,
+    EMAIL VARCHAR(50) NOT NULL UNIQUE,
     ROLE ENUM('ADMIN', 'CINEMAOWNER', 'USER'),
     CONFIRMED BOOLEAN
 )";
@@ -24,7 +23,7 @@ if ($conn->query($sql_str) === TRUE) {
 
 $sql_str = "CREATE TABLE Movies(
     ID VARCHAR(10) NOT NULL PRIMARY KEY,
-    TITLE VARCHAR(20),
+    TITLE VARCHAR(20) NOT NULL,
     STARTDATE DATE,
     ENDDATE DATE, 
     CINEMANAME VARCHAR(20),
