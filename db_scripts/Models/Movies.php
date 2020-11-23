@@ -1,7 +1,7 @@
 
 <?php
 
-class Movies
+class Movie
 {
     public string $id;
     public string $title;
@@ -83,7 +83,7 @@ class Movies
     private function generateID()
     {
         do {
-            $this->id = getRandomString(9, Movies::MOVIE_ID_PREFIX);
+            $this->id = getRandomString(9, Movie::MOVIE_ID_PREFIX);
         } while($this->checkIfUniqueID() === false);
     }
 
@@ -91,7 +91,7 @@ class Movies
     {
         $conn = OpenCon(true);
 
-        $sql_str = "SELECT ID FROM Users WHERE id=?";
+        $sql_str = "SELECT ID FROM movies WHERE id=?";
         $stmt = $conn->prepare($sql_str);
         $stmt->bind_param("s",$id);
         $id = $this->id;

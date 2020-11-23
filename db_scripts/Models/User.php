@@ -44,12 +44,14 @@ class User
         }
         if (empty($this->password))
         {
-            echo "PASSWORD was empty\n";
+            echo "Password was empty\n";
             return false;
         }
+
+        // TODO: Check beforehand for non-unique id
         if (empty($this->email))
         {
-            echo "PASSWORD was empty\n";
+            echo "E-mail was empty\n";
             return false;
         }
 

@@ -1,7 +1,23 @@
 <?php
 include '../db_scripts/Models/User.php';
 include '../db_scripts/db_connection.php';
-include_once('../folder/Random.php');
+include_once('../Utils/Random.php');
+include_once('../Utils/Logs.php');
+
+//$user = new User(
+//        "Dimitris",
+//        "Kastrinakis",
+//        "dkastrinakis",
+//        "1234",
+//        "dk@email.com",
+//        User::ADMIN,
+//        true
+//);
+//
+//if (!$user->addToDB())
+//{
+//    echo "Error adding user.\n";
+//}
 ?>
 
 <!DOCTYPE html>
