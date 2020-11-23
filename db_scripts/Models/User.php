@@ -12,72 +12,80 @@ class User
     public string $role;
     public bool $confirmed;
 
+    const ADMIN = "ADMIN";
+    const CINEMAOWNER = "CINEMAOWNER";
+    const USER = "USER";
 
-    public function __construct($id, $name, $surname, $username, $password, $email, $role, $confirmed)
+    const USER_ID_PREFIX = "u";
+
+    public function __construct($name, $surname, $username, $password, $email, $role, $confirmed)
     {
-        $this->$id = $id;
-        $this->$name = $name;
-        $this->$surname = $surname;
-        $this->$username = $username;
-        $this->$password = $password;
-        $this->$email = $email;
-        $this->$role = $role;
-        $this->$confirmed = $confirmed;
+        $this->generateID();
+        $this->name = $name;
+        $this->surname = $surname;
+        $this->username = $username;
+        $this->password = $password;
+        $this->email = $email;
+        $this->role = $role;
+        $this->confirmed = $confirmed;
     }
 
-
-    /** @noinspection SpellCheckingInspection */
     public function addToDB():bool
     {
-        // @TODO check user data
-
         if (empty($this->id))
         {
-            echo "ID was empty";
+            echo "ID was empty\n";
             return false;
         }
         if (empty($this->username))
         {
-            echo "Username was empty";
+            echo "Username was empty\n";
             return false;
         }
-        if (empty($this->PASSWORD))
+        if (empty($this->password))
         {
-            echo "PASSWORD was empty";
+            echo "PASSWORD was empty\n";
             return false;
         }
-        if (empty($this->EMAIL))
+        if (empty($this->email))
         {
-            echo "PASSWORD was empty";
+            echo "PASSWORD was empty\n";
             return false;
         }
-
-
-
 
         $conn = OpenCon(true);
 
-        $sql_str = "INSERT INTO Users (ID, NAME, SURNAME, USERNAME, PASSWORD, EMAIL, ROLE, CONFIRMED)
-        VALUES(?, ?, ?, ?, ?, ?, ?, :CONFIRMED)";
+        $sql_str = "INSERT INTO Users VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conn->prepare($sql_str);
 
-        if (!$stmt->bind_param("sssssssi", $this->id,$this->name,$this->surname,$this->username,$this->password,$this->email,$this->role,$this->confirmed))
-            echo "Binding error while Adding User";
+        if (!$stmt->bind_param("sssssssi", $id,$name,$surname,$username,$password,$email,$role,$confirmed))
+            echo "Binding error while Adding User\n";
+
+        $id = $this->id;
+        $name = $this->name;
+        $surname = $this->surname;
+        $username = $this->username;
+        $password = $this->password;
+        $email = $this->email;
+        $role = $this->role;
+        $confirmed = $this->confirmed;
 
         if (!$stmt->execute())
-            echo "Add user failed: " . $stmt->error;
+        {
+            echo "Add user failed: " . $stmt->error . "\n";
+            $stmt->close();
+            CloseCon($conn);
+            return false;
+        }
         else
-            echo "Added user successfully!";
+        {
+            echo "Added user successfully!\n";
+            $stmt->close();
+            CloseCon($conn);
+            return true;
+        }
 
-        $stmt->close();
-
-
-
-        if ($conn->query($sql_str) === TRUE)
-            echo "User Added!\n";
-        else
-            echo "Error adding user" . $conn->error ."\n";
 
     }
 
@@ -96,12 +104,32 @@ class User
 
         $stmt->close();
 
+        CloseCon($conn);
+    }
 
+    private function generateID()
+    {
+        do {
+            $this->id = getRandomString(9, User::USER_ID_PREFIX);
+        } while($this->checkIfUniqueID() === false);
+    }
 
-        if ($conn->query($sql_str) === TRUE)
-            echo "User Added!\n";
+    public function checkIfUniqueID():bool
+    {
+        $conn = OpenCon(true);
+
+        $sql_str = "SELECT ID FROM Users WHERE id=?";
+        $stmt = $conn->prepare($sql_str);
+        $stmt->bind_param("s",$id);
+        $id = $this->id;
+
+        if (!$stmt->execute())
+            echo "Check UID failed " . $stmt->error . "\n";
+
+        if ($stmt->affected_rows === 1)
+            return false;
         else
-            echo "Error adding user" . $conn->error ."\n";
+            return true;
     }
 
 }
