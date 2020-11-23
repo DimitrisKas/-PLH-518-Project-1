@@ -10,6 +10,8 @@ class Movies
     public string $cinema_name;
     public string $category;
 
+    const MOVIE_ID_PREFIX = "m";
+
     public function __construct($title, $start_date, $end_date, $cinema_name, $category)
     {
         $this->generateID();
@@ -18,6 +20,7 @@ class Movies
         $this->end_date = $end_date;
         $this->cinema_name = $cinema_name;
         $this->category = $category;
+
     }
 
     public function addToDB():bool
@@ -80,7 +83,7 @@ class Movies
     private function generateID()
     {
         do {
-            $this->id = getRandomString(9, User::USER_ID_PREFIX);
+            $this->id = getRandomString(9, Movies::MOVIE_ID_PREFIX);
         } while($this->checkIfUniqueID() === false);
     }
 
@@ -94,7 +97,7 @@ class Movies
         $id = $this->id;
 
         if (!$stmt->execute())
-            echo "Check UID failed " . $stmt->error . "\n";
+            echo "Check Movie ID failed " . $stmt->error . "\n";
 
         if ($stmt->affected_rows === 1)
             return false;

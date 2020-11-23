@@ -1,5 +1,7 @@
 <?php
 include '../db_scripts/Models/User.php';
+include '../db_scripts/db_connection.php';
+include_once('../folder/Random.php');
 ?>
 
 <!DOCTYPE html>
