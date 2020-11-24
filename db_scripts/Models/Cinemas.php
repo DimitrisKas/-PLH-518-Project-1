@@ -1,7 +1,7 @@
 
 <?php
 
-class Favorite
+class Cinemas
 {
     public string $id;
     public string $owner;
