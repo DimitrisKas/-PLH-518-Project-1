@@ -15,9 +15,9 @@ $sql_str = "CREATE TABLE Users(
 )";
 
 if ($conn->query($sql_str) === TRUE) {
-    echo "Table \"Users\" created!\n";
+    logger("Table \"Users\" created!");
 } else {
-    echo "Error creating \"Users\" Table: " . $conn->error ."\n";
+    logger("Error creating \"Users\" Table: " . $conn->error);
 }
 
 
@@ -30,9 +30,9 @@ $sql_str = "CREATE TABLE Movies(
     CATEGORY VARCHAR(20)
 )";
 if ($conn->query($sql_str) === TRUE) {
-    echo "Table \"Movies\" created!\n";
+    logger("Table \"Movies\" created!");
 } else {
-    echo "Error creating \"Movies\" Table: " . $conn->error ."\n";
+    logger("Error creating \"Movies\" Table: " . $conn->error);
 }
 
 $sql_str = "CREATE TABLE Favorites(
@@ -43,9 +43,9 @@ $sql_str = "CREATE TABLE Favorites(
     FOREIGN KEY (MOVIEID) REFERENCES Movies(ID)
 )";
 if ($conn->query($sql_str) === TRUE) {
-    echo "Table \"Favorites\" created!\n";
+    logger("Table \"Favorites\" created!");
 } else {
-    echo "Error creating \"Favorites\" Table: " . $conn->error ."\n";
+    logger("Error creating \"Favorites\" Table: " . $conn->error);
 }
 
 $sql_str = "CREATE TABLE Cinemas(
@@ -55,9 +55,9 @@ $sql_str = "CREATE TABLE Cinemas(
 )";
 
 if ($conn->query($sql_str) === TRUE) {
-    echo "Table \"Cinemas\" created!\n";
+    logger("Table \"Cinemas\" created!");
 } else {
-    echo "Error creating \"Cinemas\" Table: " . $conn->error ."\n";
+    logger("Error creating \"Cinemas\" Table: " . $conn->error);
 }
 
 CloseCon($conn);

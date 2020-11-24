@@ -16,7 +16,7 @@ class User
     const CINEMAOWNER = "CINEMAOWNER";
     const USER = "USER";
 
-    const USER_ID_PREFIX = "u";
+    const ID_PREFIX = "u";
 
     public function __construct($name, $surname, $username, $password, $email, $role, $confirmed)
     {
@@ -34,24 +34,24 @@ class User
     {
         if (empty($this->id))
         {
-            echo "ID was empty\n";
+            logger("ID was empty.");
             return false;
         }
         if (empty($this->username))
         {
-            echo "Username was empty\n";
+            logger("Username was empty.");
             return false;
         }
         if (empty($this->password))
         {
-            echo "Password was empty\n";
+            logger("Password was empty.");
             return false;
         }
 
         // TODO: Check beforehand for non-unique id
         if (empty($this->email))
         {
-            echo "E-mail was empty\n";
+            logger("E-mail was empty.");
             return false;
         }
 
@@ -62,7 +62,7 @@ class User
         $stmt = $conn->prepare($sql_str);
 
         if (!$stmt->bind_param("sssssssi", $id,$name,$surname,$username,$password,$email,$role,$confirmed))
-            echo "Binding error while Adding User\n";
+            logger("Binding error while Adding User.");
 
         $id = $this->id;
         $name = $this->name;
@@ -75,14 +75,14 @@ class User
 
         if (!$stmt->execute())
         {
-            echo "Add user failed: " . $stmt->error . "\n";
+            logger("Add user failed: " . $stmt->error);
             $stmt->close();
             CloseCon($conn);
             return false;
         }
         else
         {
-            echo "Added user successfully!\n";
+            logger("Added user successfully.");
             $stmt->close();
             CloseCon($conn);
             return true;
@@ -100,9 +100,9 @@ class User
         $stmt->bind_param("s",$id);
 
         if (!$stmt->execute())
-            echo "Remove User failed " . $stmt->error;
+            logger("Remove User failed " . $stmt->error);
         else
-            echo "Removed user successfully!";
+            logger("Removed user successfully!");
 
         $stmt->close();
 
@@ -112,7 +112,7 @@ class User
     private function generateID()
     {
         do {
-            $this->id = getRandomString(9, User::USER_ID_PREFIX);
+            $this->id = getRandomString(9, $this::ID_PREFIX);
         } while($this->checkIfUniqueID() === false);
     }
 
@@ -126,7 +126,7 @@ class User
         $id = $this->id;
 
         if (!$stmt->execute())
-            echo "Check UID failed " . $stmt->error . "\n";
+            logger("Check UID failed " . $stmt->error);
 
         if ($stmt->affected_rows === 1)
             return false;

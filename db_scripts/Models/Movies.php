@@ -10,7 +10,7 @@ class Movie
     public string $cinema_name;
     public string $category;
 
-    const MOVIE_ID_PREFIX = "m";
+    const ID_PREFIX = "m";
 
     public function __construct($title, $start_date, $end_date, $cinema_name, $category)
     {
@@ -27,12 +27,12 @@ class Movie
     {
         if (empty($this->id))
         {
-            echo "ID was empty\n";
+            logger("ID was empty.");
             return false;
         }
         if (empty($this->title))
         {
-            echo "Title was empty\n";
+            logger("Title was empty.");
             return false;
         }
 
@@ -43,7 +43,7 @@ class Movie
         $stmt = $conn->prepare($sql_str);
 
         if (!$stmt->bind_param("ssssss", $id,$title,$start_date,$end_date,$cinema_name,$category))
-            echo "Binding error while Adding Movie\n";
+            logger("Binding error while adding Movie.");
 
         $id = $this->id;
         $title = $this->title;
@@ -53,9 +53,9 @@ class Movie
         $category = $this->category;
 
         if (!$stmt->execute())
-            echo "Add Movie failed: " . $stmt->error . "\n";
+            logger("Add Movie failed: " . $stmt->error . ".");
         else
-            echo "Added Movie successfully!\n";
+            logger("Added Movie successfully!.");
 
         $stmt->close();
         CloseCon($conn);
@@ -65,14 +65,14 @@ class Movie
     {
         $conn = OpenCon(true);
 
-        $sql_str = "DELETE FROM Users WHERE id=?";
+        $sql_str = "DELETE FROM movies WHERE id=?";
         $stmt = $conn->prepare($sql_str);
         $stmt->bind_param("s",$id);
 
         if (!$stmt->execute())
-            echo "Remove User failed " . $stmt->error;
+            logger("Remove Movie failed " . $stmt->error);
         else
-            echo "Removed user successfully!";
+            logger("Removed Movie successfully!");
 
         $stmt->close();
 
@@ -83,7 +83,7 @@ class Movie
     private function generateID()
     {
         do {
-            $this->id = getRandomString(9, Movie::MOVIE_ID_PREFIX);
+            $this->id = getRandomString(9, $this::ID_PREFIX);
         } while($this->checkIfUniqueID() === false);
     }
 
@@ -97,7 +97,7 @@ class Movie
         $id = $this->id;
 
         if (!$stmt->execute())
-            echo "Check Movie ID failed " . $stmt->error . "\n";
+            logger("Check Movie ID failed " . $stmt->error . ".");
 
         if ($stmt->affected_rows === 1)
             return false;

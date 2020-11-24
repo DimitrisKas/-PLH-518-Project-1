@@ -14,7 +14,7 @@ function OpenCon($connect_to_db)
     }
     
     if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+        logger("Connection failed: " . $conn->connect_error);
     }
     return $conn;
  }
