@@ -91,24 +91,6 @@ class User
 
     }
 
-    public static function removeFromDB(string $id)
-    {
-        $conn = OpenCon(true);
-
-        $sql_str = "DELETE FROM Users WHERE id=?";
-        $stmt = $conn->prepare($sql_str);
-        $stmt->bind_param("s",$id);
-
-        if (!$stmt->execute())
-            logger("Remove User failed " . $stmt->error);
-        else
-            logger("Removed user successfully!");
-
-        $stmt->close();
-
-        CloseCon($conn);
-    }
-
     private function generateID()
     {
         do {
@@ -134,4 +116,51 @@ class User
             return true;
     }
 
+    // static functions
+    public static function removeFromDB(string $id)
+    {
+        $conn = OpenCon(true);
+
+        $sql_str = "DELETE FROM Users WHERE id=?";
+        $stmt = $conn->prepare($sql_str);
+        $stmt->bind_param("s",$id);
+
+        if (!$stmt->execute())
+            logger("Remove User failed " . $stmt->error);
+        else
+            logger("Removed user successfully!");
+
+        $stmt->close();
+
+        CloseCon($conn);
+    }
+
+    public static function getAllUsers()
+    {
+        $conn = OpenCon(true);
+
+        $sql_str = "SELECT * FROM Users";
+        $stmt = $conn->prepare($sql_str);
+//        $stmt->bind_param("s",$id);
+
+        if (!$stmt->execute())
+            logger("Get users failed " . $stmt->error);
+
+        $result = $stmt->get_result();
+
+        $num_of_rows = $result->num_rows;
+        logger("Found " . $num_of_rows . " users.");
+
+        while ($row = $result->fetch_assoc()) {
+            $msg = 'ID: '.$row['ID'] . ', Username: '. $row['USERNAME'] . ', Role: '. $row['ROLE'];
+            logger($msg);
+        }
+
+        /* free results */
+        $stmt->free_result();
+
+        $stmt->close();
+
+        CloseCon($conn);
+    }
 }
