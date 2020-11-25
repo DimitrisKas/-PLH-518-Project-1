@@ -1,23 +1,52 @@
 <?php
-include '../db_scripts/Models/User.php';
-include '../db_scripts/db_connection.php';
+include_once('../db_scripts/Models/User.php');
+include_once('../db_scripts/drop_db.php');
+include_once('../db_scripts/create_db.php');
+include_once('../db_scripts/create_tables.php');
 include_once('../Utils/Random.php');
 include_once('../Utils/Logs.php');
 
-//$user = new User(
-//        "Dimitris",
-//        "Kastrinakis",
-//        "dkastrinakis",
-//        "1234",
-//        "dk@email.com",
-//        User::ADMIN,
-//        true
-//);
-//
-//if (!$user->addToDB())
-//{
-//    echo "Error adding user.\n";
-//}
+function initDB()
+{
+    dropDB();
+    createDB();
+    createTables();
+
+    $user = new User(
+            "Dimitris",
+            "Kastrinakis",
+            "dkastrinakis",
+            "1234",
+            "dk@email.com",
+            User::ADMIN,
+            true
+    );
+    if (!$user->addToDB())
+    {
+        logger("Error adding user.");
+    }
+    $user = new User(
+        "Bob",
+        "Bobby",
+        "user2",
+        "1234",
+        "dk@email2.com",
+        User::ADMIN,
+        true
+    );
+
+
+    if (!$user->addToDB())
+    {
+        logger("Error adding user.");
+    }
+
+    User::getAllUsers();
+}
+
+
+//initDB();
+
 ?>
 
 <!DOCTYPE html>
