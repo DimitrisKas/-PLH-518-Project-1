@@ -47,8 +47,6 @@ class User
             logger("Password was empty.");
             return false;
         }
-
-        // TODO: Check beforehand for non-unique id
         if (empty($this->email))
         {
             logger("E-mail was empty.");
@@ -141,7 +139,6 @@ class User
 
         $sql_str = "SELECT * FROM Users";
         $stmt = $conn->prepare($sql_str);
-//        $stmt->bind_param("s",$id);
 
         if (!$stmt->execute())
             logger("Get users failed " . $stmt->error);
@@ -156,11 +153,61 @@ class User
             logger($msg);
         }
 
-        /* free results */
         $stmt->free_result();
-
         $stmt->close();
 
         CloseCon($conn);
+    }
+
+
+    /**
+     * Tries to login a user based on given Usernam and Password.
+     * On Success, returns User model.
+     * On Failure, returns false.
+     * @param $username
+     * @param $password
+     * @return false|User
+     */
+    public static function LoginUser($username, $password)
+    {
+        $conn = OpenCon(true);
+
+        $sql_str = "SELECT * FROM Users WHERE USERNAME=? AND PASSWORD=?";
+        $stmt = $conn->prepare($sql_str); $stmt = $conn->prepare($sql_str);
+        $stmt->bind_param("ss",$_username, $_password);
+        $_username = $username;
+        $_password = $password;
+
+        if (!$stmt->execute())
+            logger("Login User statment bind failed: " . $stmt->error);
+
+        $result = $stmt->get_result();
+
+        $num_of_rows = $result->num_rows;
+        logger("Found " . $num_of_rows . " users.");
+
+        if ($num_of_rows === 1)
+        {
+            $row = $result->fetch_assoc();
+            $user = new User($row['NAME'], $row['SURNAME'], $row['USERNAME'], $row['PASSWORD'], $row['EMAIL'], $row['ROLE'] ,$row['CONFIRMED']);
+            $user->id = $row['ID'];
+
+            $stmt->free_result();
+            $stmt->close();
+            CloseCon($conn);
+
+            return $user;
+        }
+        else
+        {
+            logger("Couldn't authenticate user: ". $username);
+
+            $stmt->free_result();
+            $stmt->close();
+            CloseCon($conn);
+            return false;
+        }
+
+
     }
 }
