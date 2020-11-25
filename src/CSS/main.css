@@ -1,0 +1,84 @@
+:root {
+    --primaryColor: 114, 61, 70;
+    --secondaryColor: 226, 109, 92;
+    --thirdColor: 255, 225, 168;
+    --fourthColor: 201, 203, 163;
+
+    --backgroundDark: 71, 45, 48;
+}
+
+body {
+    margin:0;
+    font-size:32px;
+}
+
+.text-color-primary {
+    color: rgba(var(--primaryColor), 1);
+}
+
+.text-color-dark {
+    color: rgba(var(--backgroundDark), 1);
+}
+
+.card {
+    padding: 2em;
+    background: white;
+    border-radius: 5px;
+    box-shadow: rgba(10, 10, 10, 0.1) 1px 1px 10px 3px;
+    transform: translate(-50%, -50%);
+}
+
+input, label, span, p {
+    font-size: 0.67em;
+}
+
+.btn-primary {
+    border-radius: 5px;
+    background: rgb(var(--primaryColor));
+    color: white;
+    padding: 0.4em 0;
+}
+
+.fl-row {
+    display:flex;
+    flex-direction: row;
+}
+
+.fl-row {
+    display:flex;
+    flex-direction: column;
+}
+
+
+
+label {
+    color: #888;
+    margin-bottom: 0.4em;
+}
+
+input[type=text], input[type=password] {
+    padding: 0.8em 0.8em;
+    border:none;
+    border-radius: 4px;
+    background: rgba(245,245,245,1);
+    color: #666;
+    box-shadow: rgba(205,205,205,0.4) inset 1px 1px 3px 3px;
+
+    transition: box-shadow 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+input[type=text]::placeholder, input[type=password]::placeholder {
+    color: #999;
+}
+
+input[type=text]:hover, input[type=password]:hover {
+    outline: none;
+    box-shadow:  rgba(190,190,190,0.2) inset 1px 1px 3px 3px,
+    rgba(var(--primaryColor), 0.3) 0px 0px 1px 3px;
+}
+input[type=text]:focus, input[type=password]:focus {
+    outline: none;
+    box-shadow:  rgba(190,190,190,0.6) inset 1px 1px 3px 3px,
+        rgba(var(--primaryColor), 0.8) 0px 0px 1px 3px;
+}
+

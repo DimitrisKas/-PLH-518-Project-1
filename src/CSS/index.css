@@ -1,0 +1,47 @@
+
+#index-body {
+    overflow: hidden;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+.upper-half {
+    background: url("../assets/cinema_hero2.jpg") no-repeat fixed;
+    background-size: cover;
+    background-position-y: 240%;
+    height: 50vh;
+}
+
+.bottom-half {
+    height: 50vh;
+    box-shadow: rgba(10, 10, 10, 0.5) 0px 0px 10px 3px;
+}
+
+#top-nav {
+
+}
+
+#Logo-Text{
+    position: absolute;
+    top:10%;
+    left: 10%;
+    color: white;
+}
+
+
+#index-card {
+    position: absolute;
+    top:50%;
+    left: 50%;
+}
+
+#index-card > h3 {
+    margin: 0 0 0.8em;
+}
+
+#index-card input {
+    margin-bottom: 0.8em;
+}
+
+#index-card label {
+    display: none;
+}

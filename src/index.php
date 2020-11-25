@@ -55,11 +55,25 @@ function initDB()
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project 1</title>
+    <link rel='stylesheet' type='text/css' href='CSS/main.css' />
+    <link rel='stylesheet' type='text/css' href='CSS/index.css' />
 </head>
-<body>
-    <h1>Hello world!</h1>
-    <p>This is some text</p>
-    <?php echo "<h1>Hello world!</h1>";?>
+<body id="index-body">
+    <div class="upper-half"></div>
+    <div class="bottom-half"></div>
+    <div id="top-nav">
+        <h2 id="Logo-Text">CineMania</h2>
+    </div>
+    <div id="index-card" class="card">
+        <h3 class="text-color-dark">Log in</h3>
+        <form action="./welcome.php" method="post" id="login-form" class="fl-row">
+            <label for="username_input">Username</label>
+            <input type="text" id="username_input" name="username" placeholder="Username"/>
+            <label for="password_input">Password:</label>
+            <input type="password" id="password_input"  name="password" placeholder="Password"/>
+            <input type="submit" class="btn-primary"/>
+        </form>
+    </div>
 </body>
 </html>
 
