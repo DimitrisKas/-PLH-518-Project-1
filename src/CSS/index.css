@@ -28,20 +28,35 @@
 }
 
 
-#index-card {
+#index-main-form {
     position: absolute;
     top:50%;
     left: 50%;
+
+    transform: translate(-50%, -50%);
 }
 
-#index-card > h3 {
+#index-main-form  h3 {
     margin: 0 0 0.8em;
 }
 
-#index-card input {
+#index-main-form input {
     margin-bottom: 0.8em;
 }
 
-#index-card label {
+#index-main-form label {
     display: none;
 }
+
+#signup-text {
+    margin-top: 1em;
+    text-align: center;
+    transition: text-decoration-line 0.3s ease-out;
+    cursor: pointer;
+}
+
+#signup-text:hover {
+    text-decoration-line: underline;
+}
+
+#signup-text

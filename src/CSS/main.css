@@ -25,7 +25,6 @@ body {
     background: white;
     border-radius: 5px;
     box-shadow: rgba(10, 10, 10, 0.1) 1px 1px 10px 3px;
-    transform: translate(-50%, -50%);
 }
 
 input, label, span, p {
@@ -44,12 +43,10 @@ input, label, span, p {
     flex-direction: row;
 }
 
-.fl-row {
+.fl-col {
     display:flex;
     flex-direction: column;
 }
-
-
 
 label {
     color: #888;
@@ -82,3 +79,13 @@ input[type=text]:focus, input[type=password]:focus {
         rgba(var(--primaryColor), 0.8) 0px 0px 1px 3px;
 }
 
+select {
+    font-size: 0.67em;
+    padding: 0.8em 0.8em;
+    margin-bottom: 0.8em;
+    border:none;
+    border-radius: 4px;
+    background: rgba(245,245,245,1);
+    color: #666;
+    box-shadow: rgba(205,205,205,0.4) inset 1px 1px 3px 3px;
+}
