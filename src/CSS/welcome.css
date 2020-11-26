@@ -1,0 +1,32 @@
+
+
+#welcome-options {
+    padding: 1em 1em;
+    overflow: auto;
+    height: 90vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background: #fdfdfd;
+}
+
+.welcome-option {
+    width: 20em;
+    padding: 1em;
+    margin-bottom: 0.7em;
+    transition: color 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.welcome-option:hover {
+    cursor: pointer;
+    box-shadow: rgba(var(--backgroundDark), 0.3) 1px 1px 10px 3px;
+    color: rgba(var(--primaryColor), 1);
+}
+
+.welcome-option h5 {
+    margin: 0 0 0.3em;
+}
+.welcome-option p {
+    margin: 0;
+}

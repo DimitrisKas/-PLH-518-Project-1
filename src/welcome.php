@@ -49,14 +49,48 @@ else
 
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMania - Welcome</title>
+    <link rel='stylesheet' type='text/css' href='CSS/main.css' />
+    <link rel='stylesheet' type='text/css' href='CSS/welcome.css' />
+</head>
+<body class="no-overflow">
+    <div class="top-nav">
+        <div class="nav-items">
+            <h5 id="top-nav-title">CineMania</h5>
+            <span>Home</span>
+        </div>
+        <form method="post" action="./index.php" class="fl-col">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+    <div class="main-content">
+        <div id="welcome-options">
+            <div class="card welcome-option">
+                <h5>Browse Movies</h5>
+                <p>View a list of all available Movies</p>
+            </div>
+            <?php if ($_SESSION['user_role'] == USER::CINEMAOWNER)
+                echo '
+                    <div class="card welcome-option">
+                        <h5>Manage your Movies</h5>
+                        <p>View and Edit your registered Movies</p>
+                    </div>
+                '?>
+            <?php if ($_SESSION['user_role'] == USER::ADMIN)
+                echo '
+                    <div class="card welcome-option">
+                        <h5>Manage Users</h5>
+                        <p>View and Edit all registered Users.</p>
+                    </div>
+                '?>
+        </div>
+    </div>
 
-<?php
-if ($error)
-    echo '<p>Could not login user!</p>';
-else
-    echo '<p>Login Successful!</p>';
-    ?>
+</body>
 
-<form method="post" action="./index.php">
-    <button type="submit">Logout</button>
-</form>
+</html>
