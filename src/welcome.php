@@ -14,26 +14,58 @@ else
     $error = false;
     if (empty($_POST['username'])){
         logger("Empty username...");
-        header("Location: " . $_SERVER['BASE_URL']);
         $error = true;
     }
 
     if (empty($_POST['password'])) {
         logger("Empty password...");
-        header("Location: " . $_SERVER['BASE_URL']);
         $error = true;
     }
 
-    if ( !$error )
+    if ( $error )
     {
-        $currentUser = User::LoginUser($_POST['username'], $_POST['password']);
+        $feedback = "true";
+        $f_title = "Username or Password was empty";
+        $f_msg_count = 0;
+        $f_color = "f-error";
+        ?>
+        <form id="signup-form" action="./index.php" method="post">
+            <input type="hidden" name="feedback" value="<?php echo $feedback?>">
+            <input type="hidden" name="f_color" value="<?php echo $f_color?>">
+            <input type="hidden" name="f_title" value="<?php echo $f_title?>">
+            <input type="hidden" name="f_msg_count" value="<?php echo $f_msg_count?>">
+        </form>
+        <script type="text/javascript">
+            document.getElementById("signup-form").submit();
+        </script>
+        <?php
+    }
+    else
+    {
+        list($wasSuccessful, $currentUser, $errorMsg) = User::LoginUser($_POST['username'], $_POST['password']);
 
-        if ($currentUser === false)
+        if ($wasSuccessful == false)
         {
-            header("Location: " . $_SERVER['BASE_URL']);
             logger("Redirecting to index");
+            $feedback = "true";
+            $f_title = "Error: " . $errorMsg;
+            $f_msg_count = 0;
+            $f_color = "f-error";
+            ?>
+                <form id="signup-form" action="./index.php" method="post">
+                    <input type="hidden" name="feedback" value="<?php echo $feedback?>">
+                    <input type="hidden" name="f_color" value="<?php echo $f_color?>">
+                    <input type="hidden" name="f_title" value="<?php echo $f_title?>">
+                    <input type="hidden" name="f_msg_count" value="<?php echo $f_msg_count?>">
+                </form>
+                <script type="text/javascript">
+                    document.getElementById("signup-form").submit();
+               </script>
+            <?php
+            return;
         }
-        else {
+        else
+        {
             $_SESSION['user_id'] = $currentUser->id;
             $_SESSION['user_username'] = $currentUser->username;
             $_SESSION['user_role'] = $currentUser->role;

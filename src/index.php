@@ -71,6 +71,10 @@ else
 if (!empty($_POST['prevLocation']) && $_POST['prevLocation'] === "signup" && $_POST['userAdded'] === "false")
     $isSigningUp = true;
 
+// Fallback value for feedback box
+if (!isset($_POST['f_color']))
+    $_POST['f_color'] = "f-warning";
+
 ?>
 
 <!DOCTYPE html>
@@ -83,26 +87,27 @@ if (!empty($_POST['prevLocation']) && $_POST['prevLocation'] === "signup" && $_P
     <link rel='stylesheet' type='text/css' href='CSS/index.css' />
 </head>
 <body id="index-body">
+
     <div class="upper-half"></div>
     <div class="bottom-half"></div>
     <div id="top-nav">
         <h2 id="Logo-Text">CineMania</h2>
-        <div id="index-feedback" class="feedback-box color-warning" <?php if (!$hasFeedback) echo 'hidden'?>>
-            <h5 class="feedback-title"><?php echo $f_title?></h5>
-                <?php
-                if($_POST['f_msg_count'] > 0)
-                {
-                    echo '<ul>';
-                    for($i =0; $i < $_POST['f_msg_count']; $i++) {
-                        echo '<li class="feedback-text">'.$_POST['f_msg'][$i].'</li>';
-                    }
-                    echo '</ul>';
-                }
-
-                ?>
-        </div>
     </div>
     <div id="index-main-form" class="fl-col">
+        <div id="index-feedback" class="feedback-box <?php echo $_POST['f_color']?>" <?php if (!$hasFeedback) echo 'hidden'?>>
+            <span class="feedback-title"><?php echo $f_title?></span>
+            <?php
+            if($_POST['f_msg_count'] > 0)
+            {
+                echo '<ul>';
+                for($i =0; $i < $_POST['f_msg_count']; $i++) {
+                    echo '<li class="feedback-text">'.$_POST['f_msg'][$i].'</li>';
+                }
+                echo '</ul>';
+            }
+
+            ?>
+        </div>
         <div id="index-card-login" class="card" <?php echo ($isSigningUp ? "hidden":"")?>>
             <h3 class="text-color-dark">Log in</h3>
             <form action="./welcome.php" method="post" id="login-form" class="fl-col">
@@ -147,7 +152,9 @@ if (!empty($_POST['prevLocation']) && $_POST['prevLocation'] === "signup" && $_P
                 </select>
                 <input type="submit" value="Sign Up" class="btn-primary"/>
             </form>
+
         </div>
+
         <div class="fl-col">
             <span id="signup-text" onclick="signup_toggle()">Do you want to Sign Up instead?</span>
         </div>
@@ -160,10 +167,15 @@ if (!empty($_POST['prevLocation']) && $_POST['prevLocation'] === "signup" && $_P
     let signupCard = document.getElementById("index-card-signup");
     let loginCard = document.getElementById("index-card-login");
 
+    let feedbackBox = document.getElementById("index-feedback");
+
     function signup_toggle()
     {
         // Reverse the boolean flag
         isSigningUp = !isSigningUp;
+
+        // Hide last feedback box
+        feedbackBox.hidden = true;
 
         if (isSigningUp)
         {

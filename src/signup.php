@@ -11,7 +11,7 @@ $f_title = "";
 $feedback = "true";
 $f_msg = [];
 $f_msg_count = 0;
-$userAdded = "false";
+$userAdded = false;
 
 
 if (!empty($_POST))
@@ -30,7 +30,7 @@ if (!empty($_POST))
     if (empty($_POST['email']))
     {
         logger("No email provided");
-        $f_msg[$error_Count++] = "You need to provide a Email";
+        $f_msg[$error_Count++] = "You need to provide an E-mail";
     }
     if (empty($_POST['role']))
     {
@@ -54,7 +54,7 @@ if (!empty($_POST))
         else // Success
         {
             logger("User added successfully!");
-            $userAdded =true;
+            $userAdded = true;
             $f_title = "Sign up successful!";
             $f_msg[$f_msg_count++] = "You need to wait for an Admin to confirm you!";
         }
@@ -69,33 +69,33 @@ if (!empty($_POST))
 
 <form id="signup-form" action="./index.php" method="post">
 
-    <?php //Previous User Data
+    <?php //Previous User Data on failure
         if (!$userAdded)
         {
-            echo '<input type="hidden" name="username" value="'. isset($_POST['username']) ? $_POST['username']: '' . '">';
-            echo '<input type="hidden" name="password" value="'. isset($_POST['password']) ? $_POST['password']: '' . '">';
-            echo '<input type="hidden" name="name" value="'. isset($_POST['name']) ? $_POST['name']: '' . '">';
-            echo '<input type="hidden" name="surname" value="'. isset($_POST['surname']) ? $_POST['surname']: '' . '">';
-            echo '<input type="hidden" name="email" value="'. isset($_POST['email']) ? $_POST['email']: '' . '">';
+            ?>
+            <input type="hidden" name="f_color" value="f-warning">
+            <input type="hidden" name="username" value="<?php echo isset($_POST['username']) ? $_POST['username']: '' ?>">
+            <input type="hidden" name="password" value="<?php echo isset($_POST['password']) ? $_POST['password']: '' ?>">
+            <input type="hidden" name="name" value="<?php echo isset($_POST['name']) ? $_POST['name']: '' ?>">
+            <input type="hidden" name="surname" value="<?php echo isset($_POST['surname']) ? $_POST['surname']: '' ?>">
+            <input type="hidden" name="email" value="<?php echo isset($_POST['email']) ? $_POST['email']: '' ?>">
+            <
+            <?php
+        }
+        else
+        {
+            ?>
+                <input type="hidden" name="f_color" value="f-info">
+            <?php
         }
     ?>
-    <input type="hidden" name="username" value="<?php echo isset($_POST['username']) ? $_POST['username']: ''?>">
-    <input type="hidden" name="password" value="<?php echo isset($_POST['password']) ? $_POST['password']: ''?>">
-    <input type="hidden" name="name" value="<?php echo isset($_POST['name']) ? $_POST['name']: ''?>">
-    <input type="hidden" name="surname" value="<?php echo isset($_POST['surname']) ? $_POST['surname']: ''?>">
-    <input type="hidden" name="email" value="<?php echo isset($_POST['email']) ? $_POST['email']: ''?>">
 
     <?php // Feedback Data ?>
-    <input type="hidden" name="f_title" value="<?php echo $f_title?>">
-    <input type="hidden" name="f_msg_count" value="<?php echo $f_msg_count?>">
-    <input type="hidden" name="feedback" value="<?php echo $feedback?>">
-
     <input type="hidden" name="prevLocation" value="signup">
-    <input type="hidden" name="userAdded" value="<?php echo $userAdded?>">
+    <input type="hidden" name="userAdded" value="<?php echo $userAdded ? "true": "false" ?>">
     <input type="hidden" name="feedback" value="<?php echo $feedback?>">
     <input type="hidden" name="f_title" value="<?php echo $f_title?>">
     <input type="hidden" name="f_msg_count" value="<?php echo $f_msg_count?>">
-    <input type="hidden" name="feedback" value="<?php echo $feedback?>">
     <?php
         for($i=0; $i < $f_msg_count; $i++)
         {

@@ -139,23 +139,38 @@ select {
 }
 
 .feedback-box {
-    padding: 0.8em 1em 0.8em 1em;
+    padding: 0.5em 0.5em;
     border: #cfb2a0 solid 1px;
     border-radius: 4px;
+    width: 100%;
+}
+
+.f-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.f-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.f-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
 }
 
 .feedback-title {
     margin: 0;
+    font-weight: normal;
+    font-size: 0.75em;
 }
 
 .feedback-text {
     margin: 0;
-}
-
-.color-warning {
-    color: #856404;
-    background-color: #fff3cd;
-    border-color: #ffeeba;
 }
 
 .btn-primary {

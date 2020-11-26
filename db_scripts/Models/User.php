@@ -157,17 +157,16 @@ class User
         CloseCon($conn);
     }
 
-
-    /**
-     * Tries to login a user based on given Usernam and Password.
+    /** Tries to login a user based on given Username and Password.
      * On Success, returns User model.
-     * On Failure, returns false.
-     * @param $username
-     * @param $password
-     * @return false|User
+     * On Failure, returns NULL user model, along with reason of failure.
+     * @param $username string
+     * @param $password string
+     * @return array($successBool, $user, $errorMsg)
      */
     public static function LoginUser($username, $password)
     {
+        // TODO: Add confirmated user check
         $conn = OpenCon(true);
 
         $sql_str = "SELECT * FROM Users WHERE USERNAME=? AND PASSWORD=?";
@@ -190,21 +189,44 @@ class User
             $user = new User($row['NAME'], $row['SURNAME'], $row['USERNAME'], $row['PASSWORD'], $row['EMAIL'], $row['ROLE'] ,$row['CONFIRMED']);
             $user->id = $row['ID'];
 
-            $stmt->free_result();
-            $stmt->close();
-            CloseCon($conn);
 
-            return $user;
+            $return_arr = array(true, $user, "");
         }
         else
         {
-            logger("[USER_DB] Couldn't authenticate user: ". $username);
+            $sql_str = "SELECT * FROM Users WHERE USERNAME=?";
+            $stmt = $conn->prepare($sql_str); $stmt = $conn->prepare($sql_str);
+            $stmt->bind_param("s",$_username);
+            $_username = $username;
 
-            $stmt->free_result();
-            $stmt->close();
-            CloseCon($conn);
-            return false;
+            if (!$stmt->execute())
+                logger("[USER_DB] Login User statment bind failed: " . $stmt->error);
+
+            $result = $stmt->get_result();
+
+            $num_of_rows = $result->num_rows;
+            logger("[USER_DB] Found " . $num_of_rows . " users.");
+
+            if ($num_of_rows === 1)
+            {
+                logger("[USER_DB] Couldn't authenticate user: ". $username);
+                $return_arr = array(false, null, "Wrong password");
+            }
+            else
+            {
+                logger("[USER_DB] Couldn't find user: ". $username);
+                $return_arr = array(false, null, "Couldn't find User");
+            }
+
+
+
         }
+
+
+        $stmt->free_result();
+        $stmt->close();
+        CloseCon($conn);
+        return $return_arr;
 
 
     }
