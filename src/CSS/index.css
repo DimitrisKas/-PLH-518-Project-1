@@ -35,8 +35,8 @@
     transform: translate(-50%, -50%);
 }
 
-#index-main-form card {
-    padding: 2em;
+#index-main-form .card {
+    padding: 1.5em;
 }
 
 #index-main-form  h3 {
@@ -49,6 +49,10 @@
 
 #index-main-form label {
     display: none;
+}
+
+#index-main-form input[type=submit] {
+    font-weight: lighter;
 }
 
 #signup-text {

@@ -159,8 +159,15 @@ select {
 }
 
 .btn-primary {
-    border-radius: 5px;
+    border-radius: 3px;
+    border:none;
     background: rgb(var(--primaryColor));
     color: white;
-    padding: 0.4em 0;
+    padding: 0.8em;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background: rgba(var(--primaryColor), 0.8);
+    cursor: pointer;
 }

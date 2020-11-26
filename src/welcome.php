@@ -65,7 +65,7 @@ else
             <span>Home</span>
         </div>
         <form method="post" action="./index.php" class="fl-col">
-            <button type="submit">Logout</button>
+            <button type="submit" class="btn-primary">Logout</button>
         </form>
     </div>
     <div class="main-content">
