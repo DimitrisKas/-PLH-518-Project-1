@@ -1,7 +1,7 @@
 
 #index-body {
     overflow: hidden;
-    font-family: Roboto, Arial, Helvetica, sans-serif;
+
 }
 
 .upper-half {
@@ -17,13 +17,12 @@
 }
 
 #top-nav {
-
-}
-
-#Logo-Text{
     position: absolute;
     top:10%;
     left: 10%;
+}
+
+#Logo-Text{
     color: white;
 }
 
@@ -34,6 +33,10 @@
     left: 50%;
 
     transform: translate(-50%, -50%);
+}
+
+#index-main-form card {
+    padding: 2em;
 }
 
 #index-main-form  h3 {
@@ -59,4 +62,6 @@
     text-decoration-line: underline;
 }
 
-#signup-text
+#index-feedback ul {
+    margin: 0.5em 0 0 0;
+}

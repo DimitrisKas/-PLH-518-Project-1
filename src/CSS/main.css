@@ -5,9 +5,15 @@
     --fourthColor: 201, 203, 163;
 
     --backgroundDark: 71, 45, 48;
+
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+html {
+    height: 100%;
 }
 
 body {
+    height: 100vh;
     margin:0;
     font-size:32px;
 }
@@ -20,22 +26,17 @@ body {
     color: rgba(var(--backgroundDark), 1);
 }
 
-.card {
-    padding: 2em;
-    background: white;
-    border-radius: 5px;
-    box-shadow: rgba(10, 10, 10, 0.1) 1px 1px 10px 3px;
-}
-
-input, label, span, p {
+input, label, span, p, li {
     font-size: 0.67em;
 }
 
-.btn-primary {
+/* --- Card --- */
+
+.card {
+    padding: 0.5em;
+    background: white;
     border-radius: 5px;
-    background: rgb(var(--primaryColor));
-    color: white;
-    padding: 0.4em 0;
+    box-shadow: rgba(10, 10, 10, 0.1) 1px 1px 10px 3px;
 }
 
 .fl-row {
@@ -47,7 +48,54 @@ input, label, span, p {
     display:flex;
     flex-direction: column;
 }
+.no-overflow {
+    overflow: hidden;
+}
 
+.main-content {
+    overflow: auto;
+    width: 100vw;
+}
+
+/* --- Top Nav --- */
+.top-nav {
+    display: flex;
+    position: inherit;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px 2em;
+
+    color: white;
+    background: #222;
+}
+
+.nav-items {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#top-nav-title {
+    margin: 0 1em 0 0;
+    cursor: pointer;
+}
+
+.top-nav span {
+    margin: 0 1em 0 0;
+    font-size: large;
+    font-weight: normal;
+
+    cursor: pointer;
+}
+
+.top-nav span:hover {
+    text-decoration-line: underline;
+}
+
+
+/* --- Input --- */
 label {
     color: #888;
     margin-bottom: 0.4em;
@@ -88,4 +136,31 @@ select {
     background: rgba(245,245,245,1);
     color: #666;
     box-shadow: rgba(205,205,205,0.4) inset 1px 1px 3px 3px;
+}
+
+.feedback-box {
+    padding: 0.8em 1em 0.8em 1em;
+    border: #cfb2a0 solid 1px;
+    border-radius: 4px;
+}
+
+.feedback-title {
+    margin: 0;
+}
+
+.feedback-text {
+    margin: 0;
+}
+
+.color-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.btn-primary {
+    border-radius: 5px;
+    background: rgb(var(--primaryColor));
+    color: white;
+    padding: 0.4em 0;
 }

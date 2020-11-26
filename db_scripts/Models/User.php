@@ -34,22 +34,22 @@ class User
     {
         if (empty($this->id))
         {
-            logger("ID was empty.");
+            logger("[USER_DB] ID was empty.");
             return false;
         }
         if (empty($this->username))
         {
-            logger("Username was empty.");
+            logger("[USER_DB] Username was empty.");
             return false;
         }
         if (empty($this->password))
         {
-            logger("Password was empty.");
+            logger("[USER_DB] Password was empty.");
             return false;
         }
         if (empty($this->email))
         {
-            logger("E-mail was empty.");
+            logger("[USER_DB] E-mail was empty.");
             return false;
         }
 
@@ -60,7 +60,7 @@ class User
         $stmt = $conn->prepare($sql_str);
 
         if (!$stmt->bind_param("sssssssi", $id,$name,$surname,$username,$password,$email,$role,$confirmed))
-            logger("Binding error while Adding User.");
+            logger("[USER_DB] Binding error while Adding User.");
 
         $id = $this->id;
         $name = $this->name;
@@ -73,20 +73,18 @@ class User
 
         if (!$stmt->execute())
         {
-            logger("Add user failed: " . $stmt->error);
+            logger("[USER_DB] Add user failed: " . $stmt->error);
             $stmt->close();
             CloseCon($conn);
             return false;
         }
         else
         {
-            logger("Added user successfully.");
+            logger("[USER_DB] Added user successfully.");
             $stmt->close();
             CloseCon($conn);
             return true;
         }
-
-
     }
 
     private function generateID()
@@ -106,7 +104,7 @@ class User
         $id = $this->id;
 
         if (!$stmt->execute())
-            logger("Check UID failed " . $stmt->error);
+            logger("[USER_DB] Check UID failed " . $stmt->error);
 
         if ($stmt->affected_rows === 1)
             return false;
@@ -124,9 +122,9 @@ class User
         $stmt->bind_param("s",$id);
 
         if (!$stmt->execute())
-            logger("Remove User failed " . $stmt->error);
+            logger("[USER_DB] Remove User failed " . $stmt->error);
         else
-            logger("Removed user successfully!");
+            logger("[USER_DB] Removed user successfully!");
 
         $stmt->close();
 
@@ -141,16 +139,16 @@ class User
         $stmt = $conn->prepare($sql_str);
 
         if (!$stmt->execute())
-            logger("Get users failed " . $stmt->error);
+            logger("[USER_DB] Get users failed " . $stmt->error);
 
         $result = $stmt->get_result();
 
         $num_of_rows = $result->num_rows;
-        logger("Found " . $num_of_rows . " users.");
+        logger("[USER_DB] Found " . $num_of_rows . " users.");
 
         while ($row = $result->fetch_assoc()) {
             $msg = 'ID: '.$row['ID'] . ', Username: '. $row['USERNAME'] . ', Role: '. $row['ROLE'];
-            logger($msg);
+            logger('[USER_DB] '.$msg);
         }
 
         $stmt->free_result();
@@ -179,12 +177,12 @@ class User
         $_password = $password;
 
         if (!$stmt->execute())
-            logger("Login User statment bind failed: " . $stmt->error);
+            logger("[USER_DB] Login User statment bind failed: " . $stmt->error);
 
         $result = $stmt->get_result();
 
         $num_of_rows = $result->num_rows;
-        logger("Found " . $num_of_rows . " users.");
+        logger("[USER_DB] Found " . $num_of_rows . " users.");
 
         if ($num_of_rows === 1)
         {
@@ -200,7 +198,7 @@ class User
         }
         else
         {
-            logger("Couldn't authenticate user: ". $username);
+            logger("[USER_DB] Couldn't authenticate user: ". $username);
 
             $stmt->free_result();
             $stmt->close();
