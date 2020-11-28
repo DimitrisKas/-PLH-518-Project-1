@@ -33,6 +33,7 @@ input, label, span, p, li {
 /* --- Card --- */
 
 .card {
+    margin: 0.5em;
     padding: 0.5em;
     background: white;
     border-radius: 5px;
@@ -82,15 +83,17 @@ input, label, span, p, li {
     cursor: pointer;
 }
 
-.top-nav span {
+.top-nav a {
     margin: 0 1em 0 0;
     font-size: large;
     font-weight: normal;
+    color: inherit;
+    text-decoration-line: none;
 
     cursor: pointer;
 }
 
-.top-nav span:hover {
+.top-nav a:hover {
     text-decoration-line: underline;
 }
 
@@ -119,12 +122,12 @@ input[type=text]::placeholder, input[type=password]::placeholder {
 input[type=text]:hover, input[type=password]:hover {
     outline: none;
     box-shadow:  rgba(190,190,190,0.2) inset 1px 1px 3px 3px,
-    rgba(var(--primaryColor), 0.3) 0px 0px 1px 3px;
+    rgba(var(--primaryColor), 0.3) 0 0 1px 3px;
 }
 input[type=text]:focus, input[type=password]:focus {
     outline: none;
     box-shadow:  rgba(190,190,190,0.6) inset 1px 1px 3px 3px,
-        rgba(var(--primaryColor), 0.8) 0px 0px 1px 3px;
+                rgba(var(--primaryColor), 0.8) 0 0 1px 3px;
 }
 
 select {

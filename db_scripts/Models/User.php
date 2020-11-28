@@ -30,6 +30,7 @@ class User
         $this->confirmed = $confirmed;
     }
 
+
     public function addToDB():bool
     {
         if (empty($this->id))
@@ -113,6 +114,13 @@ class User
     }
 
     // static functions
+    public static function CreateExistingUserObj($id, $name, $surname, $username, $password, $email, $role, $confirmed):User
+    {
+        $user = new User($name, $surname, $username, $password, $email, $role, $confirmed);
+        $user->id = $id;
+        return $user;
+    }
+
     public static function removeFromDB(string $id)
     {
         $conn = OpenCon(true);
@@ -131,7 +139,7 @@ class User
         CloseCon($conn);
     }
 
-    public static function getAllUsers()
+    public static function getAllUsers():array
     {
         $conn = OpenCon(true);
 
@@ -146,7 +154,13 @@ class User
         $num_of_rows = $result->num_rows;
         logger("[USER_DB] Found " . $num_of_rows . " users.");
 
+        $ret_array = array();
         while ($row = $result->fetch_assoc()) {
+            $user = User::CreateExistingUserObj(
+                $row['ID'], $row['NAME'], $row['SURNAME'], $row['USERNAME'],
+                $row['PASSWORD'], $row['EMAIL'], $row['ROLE'] ,$row['CONFIRMED']);
+            $ret_array[] = $user;
+
             $msg = 'ID: '.$row['ID'] . ', Username: '. $row['USERNAME'] . ', Role: '. $row['ROLE'];
             logger('[USER_DB] '.$msg);
         }
@@ -155,6 +169,8 @@ class User
         $stmt->close();
 
         CloseCon($conn);
+
+        return $ret_array;
     }
 
     /** Tries to login a user based on given Username and Password.
@@ -164,7 +180,7 @@ class User
      * @param $password string
      * @return array($successBool, $user, $errorMsg)
      */
-    public static function LoginUser($username, $password)
+    public static function LoginUser(string $username, string $password)
     {
         // TODO: Add confirmated user check
         $conn = OpenCon(true);
@@ -186,8 +202,9 @@ class User
         if ($num_of_rows === 1)
         {
             $row = $result->fetch_assoc();
-            $user = new User($row['NAME'], $row['SURNAME'], $row['USERNAME'], $row['PASSWORD'], $row['EMAIL'], $row['ROLE'] ,$row['CONFIRMED']);
-            $user->id = $row['ID'];
+            $user = User::CreateExistingUserObj(
+                    $row['ID'], $row['NAME'], $row['SURNAME'], $row['USERNAME'],
+                    $row['PASSWORD'], $row['EMAIL'], $row['ROLE'] ,$row['CONFIRMED']);
 
 
             $return_arr = array(true, $user, "");

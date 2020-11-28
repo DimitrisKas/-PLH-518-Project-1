@@ -3,11 +3,15 @@ include_once '../db_scripts/Models/User.php';
 include_once '../db_scripts/db_connection.php';
 include_once('../Utils/Random.php');
 include_once('../Utils/Logs.php');
+
 session_start();
+logger("-- In Welcome.php");
 if (isset($_SESSION['login']) && $_SESSION['login'] === true)
 {
     // User already logged in...
     logger("User already logged in");
+    logger("Logged in User: " . $_SESSION['user_username']);
+    logger("Role: " . $_SESSION['user_role']);
 }
 else
 {
@@ -39,6 +43,7 @@ else
             document.getElementById("signup-form").submit();
         </script>
         <?php
+        exit();
     }
     else
     {
@@ -62,7 +67,7 @@ else
                     document.getElementById("signup-form").submit();
                </script>
             <?php
-            return;
+            exit();
         }
         else
         {
@@ -75,6 +80,7 @@ else
 
             $_SESSION['login'] = true;
             logger("Logged in User: " . $currentUser->username);
+            logger("Role: " . $currentUser->role);
         }
     }
 }
@@ -86,43 +92,56 @@ else
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineMania - Welcome</title>
+    <title>Welcome - CineMania</title>
     <link rel='stylesheet' type='text/css' href='CSS/main.css' />
     <link rel='stylesheet' type='text/css' href='CSS/welcome.css' />
 </head>
 <body class="no-overflow">
+    <?php // ---- Navigation Panel - START ----?>
     <div class="top-nav">
         <div class="nav-items">
             <h5 id="top-nav-title">CineMania</h5>
-            <span>Home</span>
+            <a href="welcome.php">Home</a>
+            <?php
+                if ($_SESSION['user_role'] === USER::CINEMAOWNER)
+                    echo '<a href="owner.php">Owner Panel</a> ';
+
+                if ($_SESSION['user_role'] === USER::ADMIN)
+                    echo '<a href="administration.php">Admin Panel</a>';
+            ?>
         </div>
         <form method="post" action="./index.php" class="fl-col">
             <button type="submit" class="btn-primary">Logout</button>
         </form>
     </div>
+    <?php // ---- Navigation Panel - END ----?>
+
     <div class="main-content">
+
         <div id="welcome-options">
-            <div class="card welcome-option">
+            <div class="card welcome-option" onclick="location.href='movies.php';">
                 <h5>Browse Movies</h5>
                 <p>View a list of all available Movies</p>
             </div>
-            <?php if ($_SESSION['user_role'] == USER::CINEMAOWNER)
+            <?php
+            if ($_SESSION['user_role'] === USER::CINEMAOWNER)
                 echo '
-                    <div class="card welcome-option">
+                    <div class="card welcome-option" onclick="location.href=\'owner.php\';">
                         <h5>Manage your Movies</h5>
                         <p>View and Edit your registered Movies</p>
                     </div>
-                '?>
-            <?php if ($_SESSION['user_role'] == USER::ADMIN)
+                    ';
+            if ($_SESSION['user_role'] === USER::ADMIN)
                 echo '
-                    <div class="card welcome-option">
+                    <div class="card welcome-option" onclick="location.href=\'administration.php\';">
                         <h5>Manage Users</h5>
                         <p>View and Edit all registered Users.</p>
                     </div>
-                '?>
+                    ';
+            ?>
         </div>
     </div>
 
 </body>
-
+<script ></script>
 </html>
