@@ -210,15 +210,20 @@ class User
         $num_of_rows = $result->num_rows;
         logger("[USER_DB] Found " . $num_of_rows . " users.");
 
+        // If USERNAME - PASSWORD pair is found
         if ($num_of_rows === 1)
         {
             $row = $result->fetch_assoc();
-            $user = User::CreateExistingUserObj(
-                    $row['ID'], $row['NAME'], $row['SURNAME'], $row['USERNAME'],
-                    $row['PASSWORD'], $row['EMAIL'], $row['ROLE'] ,$row['CONFIRMED']);
 
-
-            $return_arr = array(true, $user, "");
+            if($row['CONFIRMED'] === 0)
+                $return_arr = array(false, null, "You are not yet confirmed.");
+            else
+            {
+                $user = User::CreateExistingUserObj(
+                        $row['ID'], $row['NAME'], $row['SURNAME'], $row['USERNAME'],
+                        $row['PASSWORD'], $row['EMAIL'], $row['ROLE'] ,$row['CONFIRMED']);
+                $return_arr = array(true, $user, "");
+            }
         }
         else
         {
@@ -245,17 +250,15 @@ class User
                 logger("[USER_DB] Couldn't find user: ". $username);
                 $return_arr = array(false, null, "Couldn't find User");
             }
-
-
-
         }
 
-
+        // Cleanup
         $stmt->free_result();
         $stmt->close();
         CloseCon($conn);
+
         return $return_arr;
 
-
     }
+
 }
