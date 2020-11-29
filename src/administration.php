@@ -83,12 +83,13 @@ else
                         <th>Name</th>
                         <th>Surname</th>
                         <th>Password</th>
-                        <th>e-mail</th>
+                        <th>E-mail</th>
                         <th>Role</th>
                         <th>Confirmed</th>
                         <th></th>
                         <th></th>
                     </tr>
+
                     <?php
 
                     $users = User::getAllUsers();
@@ -112,7 +113,7 @@ else
                                         </select>
                                     </div>
                                 </td>
-                                <td><div><input type="checkbox" <?php echo $user->confirmed ? "checked" : ""?>/></div></td>
+                                <td><div><input id="<?php echo $user->id?>_confirmed" type="checkbox" <?php echo $user->confirmed ? "checked" : ""?>/></div></td>
                                 <td class="action-td">
                                     <div><button id="<?php echo $user->id?>_submit" class="btn-primary btn-success" onclick="submitUser('<?php echo $user->id?>')" >Save</button></div>
                                 </td>
@@ -131,16 +132,37 @@ else
     </div>
 </body>
 <script type="text/javascript">
-    function submitUser(uid, event)
+    function submitUser(uid)
     {
-        console.log("In Submit User");
-        event.stopPropagation();
+        this.event.stopPropagation();
+        fetch('async/edit_user.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                'user_id': uid,
+                'user_username': document.getElementById(uid+'_username').value,
+                'user_name': document.getElementById(uid+'_name').value,
+                'user_surname': document.getElementById(uid+'_surname').value,
+                'user_password': document.getElementById(uid+'_password').value,
+                'user_email': document.getElementById(uid+'_email').value,
+                'user_role': document.getElementById(uid+'_role').value,
+                'user_confirmed': document.getElementById(uid+'_confirmed').checked ? 'true' : 'false'
+            })
+        })
+            .then( response => {
+                return response.json();
+            })
+            .then( success =>{
+                if (success) {
+                    location.reload();
+                }
+            });
+
     }
 
     function deleteUser(uid)
     {
         this.event.stopPropagation();
-        console.log("In Delete User");
         fetch('async/delete_user.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -158,7 +180,6 @@ else
 
     function toggleHighlight(row)
     {
-        console.log("In toggle row")
         let rows = document.getElementById("admin-table").children[0].children;
         Array.from(rows).forEach( row => row.classList.remove("highlighted-row"));
         row.classList.add("highlighted-row");

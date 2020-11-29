@@ -150,6 +150,79 @@ class User
         return  $success;
     }
 
+
+    public static function EditUser($data):bool
+    {
+        logger("[USER_DB] Trying to edit user with id: " . $data['user_id']);
+
+        $conn = OpenCon(true);
+
+        if ($data['user_role'] !== USER::ADMIN && $data['user_role'] !== USER::CINEMAOWNER && $data['user_role'] !== USER::USER)
+            return false;
+
+        $sql_str = "UPDATE Users SET USERNAME=? , NAME=?, SURNAME=?, EMAIL=?, ROLE=?, CONFIRMED=? WHERE id=?";
+        $stmt = $conn->prepare($sql_str);
+        if (!$stmt->bind_param("sssssis",$username, $name, $surname, $email, $role, $confirmed, $id))
+            logger('[USER_DB] Error while binding');
+
+        // Validate IsConfirmed:
+        if ( !empty($data['user_confirmed']) && $data['user_confirmed'] === "true")
+            $isConfirmed = true;
+        else
+            $isConfirmed = false;
+
+
+        $username = $data['user_username'];
+        $name = $data['user_name'];
+        $surname = $data['user_surname'];
+        $email = $data['user_email'];
+        $role = $data['user_role'];
+        $confirmed = $isConfirmed;
+        $id = $data['user_id'];
+
+        if (!$stmt->execute())
+        {
+            logger("[USER_DB] Edit User failed " . $stmt->error);
+            $success = false;
+        }
+        else
+        {
+            logger("[USER_DB] Edited user successfully!");
+            $success = true;
+        }
+        $stmt->close();
+
+        // Check if user wants to change password
+        $success_pass = true;
+        if ( !empty($data['user_password']) )
+        {
+            $sql_str = "UPDATE Users SET PASSWORD=? WHERE id=?";
+            $stmt = $conn->prepare($sql_str);
+            $stmt->bind_param("ss",$password, $id);
+
+            $password = $data['user_password'];
+            $id = $data['user_id'];
+
+            if (!$stmt->execute())
+            {
+                logger("[USER_DB] Password change failed: " . $stmt->error);
+                $success_pass = false;
+            }
+            else
+            {
+                logger("[USER_DB] Changed User Password successfully!");
+                $success_pass = true;
+            }
+            $stmt->close();
+        }
+
+        // Clean up
+        CloseCon($conn);
+
+        // If everything was successful
+        return  $success && $success_pass;
+    }
+
     public static function getAllUsers():array
     {
         $conn = OpenCon(true);
