@@ -27,24 +27,8 @@ if (isset($_SESSION['login'])
         exit();
     }
 }
-else
-{
-    // Redirect to index
-    $feedback = "true";
-    $f_title = "You do not have access to that page.";
-    $f_msg_count = 0;
-    $f_color = "f-error";
-    ?>
-    <form id="return-form" action="./index.php" method="post">
-        <input type="hidden" name="feedback" value="<?php echo $feedback?>">
-        <input type="hidden" name="f_color" value="<?php echo $f_color?>">
-        <input type="hidden" name="f_title" value="<?php echo $f_title?>">
-        <input type="hidden" name="f_msg_count" value="<?php echo $f_msg_count?>">
-    </form>
-    <script type="text/javascript">
-        document.getElementById("return-form").submit();
-    </script>
-    <?php
-    exit();
-}
-?>
+
+// If failed for any reason...
+echo json_encode(false);
+exit();
+

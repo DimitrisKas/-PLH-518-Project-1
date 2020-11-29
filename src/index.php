@@ -115,7 +115,7 @@ if (!isset($_POST['f_color']))
                 <input class="custom-input" type="text" id="username_input" name="username" placeholder="Username"/>
                 <label for="password_input">Password:</label>
                 <input class="custom-input" type="password" id="password_input"  name="password" placeholder="Password"/>
-                <input type="submit" class="btn-primary"/>
+                <input type="submit" value="Submit" class="btn-primary"/>
             </form>
         </div>
 
