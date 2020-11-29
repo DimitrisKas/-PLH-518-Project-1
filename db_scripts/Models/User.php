@@ -121,8 +121,11 @@ class User
         return $user;
     }
 
-    public static function removeFromDB(string $id)
+    public static function DeleteUser(string $id):bool
     {
+        logger("[USER_DB] Trying to delete user with id: " . $id);
+        $success = false;
+
         $conn = OpenCon(true);
 
         $sql_str = "DELETE FROM Users WHERE id=?";
@@ -130,13 +133,21 @@ class User
         $stmt->bind_param("s",$id);
 
         if (!$stmt->execute())
+        {
             logger("[USER_DB] Remove User failed " . $stmt->error);
+            $success = false;
+        }
         else
+        {
             logger("[USER_DB] Removed user successfully!");
+            $success = true;
+        }
 
+        // Clean up
         $stmt->close();
-
         CloseCon($conn);
+
+        return  $success;
     }
 
     public static function getAllUsers():array

@@ -76,7 +76,7 @@ else
             <hr/>
 
             <div class="table-container">
-                <table>
+                <table id="admin-table">
                     <tr>
                         <th>ID</th>
                         <th>Username</th>
@@ -85,8 +85,9 @@ else
                         <th>Password</th>
                         <th>e-mail</th>
                         <th>Role</th>
-                        <th>Confirm</th>
-                        <th>Submit</th>
+                        <th>Confirmed</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     <?php
 
@@ -95,16 +96,29 @@ else
                     foreach ($users as $user)
                     {
                         ?>
-                            <tr id="user_<?php echo $user->id?>">
-                                <td><div><input id="<?php echo $user->id?>_id"        type="text"  value="<?php echo $user->id?>"/></div></td>
-                                <td><div><input id="<?php echo $user->id?>_username"  type="text"  value="<?php echo $user->username?>"/></div></td>
-                                <td><div><input id="<?php echo $user->id?>_name"      type="text"  value="<?php echo $user->name?>"/></div></td>
-                                <td><div><input id="<?php echo $user->id?>_surname"   type="text"  value="<?php echo $user->surname?>"/></div></td>
-                                <td><div><input id="<?php echo $user->id?>_password"  type="text"  value="" placeholder="Enter new password..."/></div></td>
-                                <td><div><input id="<?php echo $user->id?>_email"     type="text"  value="<?php echo $user->email?>"/></div></td>
-                                <td><div><input id="<?php echo $user->id?>_role"      type="text"  value="<?php echo $user->role?>"/></div></td>
-                                <td></td>
-                                <td><div><button id="<?php echo $user->id?>_submit" class="btn-primary" onclick="submitUser(this)" >Save</button></div></td>
+                            <tr id="user_<?php echo $user->id?>" onclick="toggleHighlight(this)">
+                                <td><div><input id="<?php echo $user->id?>_id"        type="text"  value="<?php echo $user->id?>"       class="disabled-input" disabled/></div></td>
+                                <td><div><input id="<?php echo $user->id?>_username"  type="text"  value="<?php echo $user->username?>" class="custom-input"/></div></td>
+                                <td><div><input id="<?php echo $user->id?>_name"      type="text"  value="<?php echo $user->name?>"     class="custom-input"/></div></td>
+                                <td><div><input id="<?php echo $user->id?>_surname"   type="text"  value="<?php echo $user->surname?>"  class="custom-input"/></div></td>
+                                <td><div><input id="<?php echo $user->id?>_password"  type="text"  value="" placeholder="Enter new password..." class="custom-input"/></div></td>
+                                <td><div><input id="<?php echo $user->id?>_email"     type="text"  value="<?php echo $user->email?>"    class="custom-input"/></div></td>
+                                <td>
+                                    <div>
+                                        <select id="<?php echo $user->id?>_role" name="role">
+                                            <option value="ADMIN" <?php echo $user->role === User::ADMIN ? "selected" : "" ?>>Admin</option>
+                                            <option value="CINEMAOWNER" <?php echo $user->role === User::CINEMAOWNER ? "selected" : "" ?>>Cinema Owner</option>
+                                            <option value="USER" <?php echo $user->role === User::USER ? "selected" : "" ?>>User</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td><div><input type="checkbox" <?php echo $user->confirmed ? "checked" : ""?>/></div></td>
+                                <td class="action-td">
+                                    <div><button id="<?php echo $user->id?>_submit" class="btn-primary btn-success" onclick="submitUser('<?php echo $user->id?>')" >Save</button></div>
+                                </td>
+                                <td class="action-td">
+                                    <div><button id="<?php echo $user->id?>_delete" class="btn-primary btn-danger" onclick="deleteUser('<?php echo $user->id?>')" >Delete</button></div>
+                                </td>
                             </tr>
                         <?php
                     }
@@ -117,9 +131,37 @@ else
     </div>
 </body>
 <script type="text/javascript">
-    function submitUser(button)
+    function submitUser(uid, event)
     {
+        console.log("In Submit User");
+        event.stopPropagation();
+    }
 
+    function deleteUser(uid)
+    {
+        this.event.stopPropagation();
+        console.log("In Delete User");
+        fetch('async/delete_user.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ 'user_id': uid})
+        })
+            .then( response => {
+                return response.json();
+            })
+            .then( success =>{
+              if (success) {
+                  location.reload();
+              }
+            });
+    }
+
+    function toggleHighlight(row)
+    {
+        console.log("In toggle row")
+        let rows = document.getElementById("admin-table").children[0].children;
+        Array.from(rows).forEach( row => row.classList.remove("highlighted-row"));
+        row.classList.add("highlighted-row");
     }
 </script>
 </html>
