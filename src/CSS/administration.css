@@ -6,24 +6,54 @@
 }
 
 table {
-    font-size: 20px;
+    font-size: 26px;
     border-collapse: collapse;
-    border-spacing: 0;
+    border-spacing: 0px;
 }
 tr {
-    border-bottom: rgba(0,0,0,0) solid 1px;
-    margin-bottom: 0.5em;
+    border-left: rgba(var(--primaryColor), 0) solid 2px;
+    border-bottom: rgba(0, 0, 0, 0) solid 10px;
 }
 
 tr:hover {
-    background: rgba(var(--primaryColor),0.1);
-    border-bottom: rgba(var(--primaryColor),0.5) solid 1px;
-}
-tr:first-of-type {
-    background: none;
+    background: rgba(var(--primaryColor), 0.2);
+    border-left: rgba(var(--primaryColor), 0.4) solid 2px;
 }
 
+tr:first-of-type {
+    background: none;
+    border-left:none;
+}
+
+#admin_content .highlighted-row {
+    background: rgba(var(--primaryColor), 0.4);
+    border-left: rgba(var(--primaryColor), 0.8) solid 2px;
+}
+
+tr:hover .custom-input {
+    background: white;
+}
+
+tr:hover td:first-of-type, .highlighted-row td:first-of-type{
+    background: rgba(240,240,240, 1);
+}
+
+#admin_content table .btn-primary {
+    visibility: hidden;
+}
+
+#admin_content table .highlighted-row .btn-primary {
+    visibility: visible;
+}
+#admin_content table tr:hover .btn-primary {
+    visibility: visible;
+}
+
+/* --- */
+
 th {
+    text-align: left;
+    padding-left: 1em;
 }
 
 td{
@@ -38,15 +68,30 @@ td{
 
 #admin_content .btn-primary {
     padding: 0.3em 0.6em;
-    margin: 0.3em;
+    margin: 0.5em;
 }
 
-#admin_content input {
+#admin_content .custom-input, #admin_content .disabled-input {
     width: 10em;
 }
 
-input[type=text], input[type=password] {
+#admin_content .custom-input {
     padding: 0.3em 0.3em;
     box-shadow: rgba(205,205,205,0.4) inset 1px 1px 3px 3px;
     transition: box-shadow 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+#admin_content .disabled-input {
+    padding: 0.3em 0.3em;
+    color: #666;
+    background: none;
+}
+
+#admin_content select{
+    padding: 0.3em 1em 0.3em 0.3em;
+    margin:0;
+}
+
+.action-td {
+    padding-left: 0;
+    padding-right: 0;
 }

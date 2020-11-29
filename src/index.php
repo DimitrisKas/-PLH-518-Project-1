@@ -112,9 +112,9 @@ if (!isset($_POST['f_color']))
             <h3 class="text-color-dark">Log in</h3>
             <form action="./welcome.php" method="post" id="login-form" class="fl-col">
                 <label for="username_input">Username</label>
-                <input type="text" id="username_input" name="username" placeholder="Username"/>
+                <input class="custom-input" type="text" id="username_input" name="username" placeholder="Username"/>
                 <label for="password_input">Password:</label>
-                <input type="password" id="password_input"  name="password" placeholder="Password"/>
+                <input class="custom-input" type="password" id="password_input"  name="password" placeholder="Password"/>
                 <input type="submit" class="btn-primary"/>
             </form>
         </div>
@@ -124,23 +124,23 @@ if (!isset($_POST['f_color']))
             <form action="./signup.php" method="post" id="login-form_signup" class="fl-col">
 
                 <label for="username_input_signup">Username</label>
-                <input type="text" id="username_input_signup" name="username" placeholder="Username"
+                <input class="custom-input" type="text" id="username_input_signup" name="username" placeholder="Username"
                        value="<?php echo isset($_POST['username']) ? $_POST['username']: '';?>"/>
 
                 <label for="password_input_signup">Password:</label>
-                <input type="password" id="password_input_signup"  name="password" placeholder="Password"
+                <input class="custom-input" type="password" id="password_input_signup"  name="password" placeholder="Password"
                        value="<?php echo isset($_POST['password']) ? $_POST['password']: '';?>"/>
 
                 <label for="name_input">Name</label>
-                <input type="text" id="name_input"  name="name" placeholder="Name"
+                <input class="custom-input" type="text" id="name_input"  name="name" placeholder="Name"
                        value="<?php echo isset($_POST['name']) ? $_POST['name']: '';?>"/>
 
                 <label for="surname_input">Surname</label>
-                <input type="text" id="surname_input"  name="surname" placeholder="Surname"
+                <input class="custom-input" type="text" id="surname_input"  name="surname" placeholder="Surname"
                        value="<?php echo isset($_POST['surname']) ? $_POST['surname']: '';?>"/>
 
                 <label for="email_input">Email</label>
-                <input type="text" id="email_input"  name="email" placeholder="E-mail"
+                <input class="custom-input" type="text" id="email_input"  name="email" placeholder="E-mail"
                        value="<?php echo isset($_POST['email']) ? $_POST['email']: '';?>"/>
 
                 <label for="roles_input">Roles</label>
