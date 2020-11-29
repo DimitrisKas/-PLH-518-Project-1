@@ -1,7 +1,7 @@
 
 <?php
 
-class Cinemas
+class Cinema
 {
     public string $id;
     public string $owner;
@@ -62,24 +62,6 @@ class Cinemas
         }
     }
 
-    public static function removeFromDB(string $id)
-    {
-        $conn = OpenCon(true);
-
-        $sql_str = "DELETE FROM cinemas WHERE id=?";
-        $stmt = $conn->prepare($sql_str);
-        $stmt->bind_param("s",$id);
-
-        if (!$stmt->execute())
-            logger("Remove Cinema failed " . $stmt->error);
-        else
-            logger("Removed Cinema successfully!");
-
-        $stmt->close();
-
-        CloseCon($conn);
-    }
-
     private function generateID()
     {
         do {
@@ -121,6 +103,99 @@ class Cinemas
             return false;
         else
             return true;
+    }
+
+    public static function CreateExistingCinemaObj($id, $owner, $name):Cinema
+    {
+        $cinema = new Cinema( $owner, $name);
+        $cinema->id = $id;
+        return $cinema;
+    }
+
+    public static function EditCinema(string $id, string $name):bool
+    {
+        $conn = OpenCon(true);
+
+        $sql_str = "UPDATE cinemas SET NAME=? WHERE id=?";
+        $stmt = $conn->prepare($sql_str);
+        $stmt->bind_param("ss", $name, $id);
+
+        if (!$stmt->execute())
+        {
+            logger("Edit Cinema failed " . $stmt->error);
+            $success = false;
+        }
+        else
+        {
+            logger("Edited Cinema successfully!");
+            $success = true;
+        }
+
+        // Cleanup
+        $stmt->close();
+        CloseCon($conn);
+
+        return $success;
+    }
+
+    public static function DeleteCinema(string $id):bool
+    {
+        $conn = OpenCon(true);
+
+        $sql_str = "DELETE FROM cinemas WHERE id=?";
+        $stmt = $conn->prepare($sql_str);
+        $stmt->bind_param("s",$id);
+
+        if (!$stmt->execute())
+        {
+            logger("Remove Cinema failed " . $stmt->error);
+            $success = false;
+        }
+        else
+        {
+            logger("Removed Cinema successfully!");
+            $success = true;
+        }
+
+        // Cleanup
+        $stmt->close();
+        CloseCon($conn);
+
+        return $success;
+    }
+
+    public static function GetAllOwnerCinemas(string $user_id):array
+    {
+        $conn = OpenCon(true);
+
+        $sql_str = "SELECT * FROM cinemas WHERE OWNER=?";
+        $stmt = $conn->prepare($sql_str);
+        $stmt->bind_param("s", $id);
+
+        $id = $user_id;
+
+        if (!$stmt->execute())
+            logger("Get Cinemas failed " . $stmt->error);
+
+        $result = $stmt->get_result();
+
+        $num_of_rows = $result->num_rows;
+        logger("Found " . $num_of_rows . " cinemas.");
+
+        $ret_array = array();
+        while ($row = $result->fetch_assoc()) {
+
+            // Create object and append to return array
+            $cinema = Cinema::CreateExistingCinemaObj($row['ID'], $row['OWNER'], $row['NAME']);
+            $ret_array[] = $cinema;
+        }
+
+        $stmt->free_result();
+        $stmt->close();
+
+        CloseCon($conn);
+
+        return $ret_array;
     }
 
 }
