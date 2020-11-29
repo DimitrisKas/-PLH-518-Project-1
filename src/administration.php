@@ -1,5 +1,5 @@
 <?php
-include_once '../db_scripts/Models/User.php';
+include_once '../db_scripts/Models/Users.php';
 include_once '../db_scripts/db_connection.php';
 include_once('../Utils/Random.php');
 include_once('../Utils/Logs.php');
@@ -25,14 +25,14 @@ else
     $f_msg_count = 0;
     $f_color = "f-error";
     ?>
-    <form id="admin-to-index-form" action="./index.php" method="post">
+    <form id="toIndex" action="./index.php" method="post">
         <input type="hidden" name="feedback" value="<?php echo $feedback?>">
         <input type="hidden" name="f_color" value="<?php echo $f_color?>">
         <input type="hidden" name="f_title" value="<?php echo $f_title?>">
         <input type="hidden" name="f_msg_count" value="<?php echo $f_msg_count?>">
     </form>
     <script type="text/javascript">
-        document.getElementById("admin-to-index-form").submit();
+        document.getElementById("toIndex").submit();
     </script>
     <?php
     exit();
@@ -56,6 +56,7 @@ else
         <div class="nav-items">
             <h5 id="top-nav-title">CineMania</h5>
             <a href="welcome.php">Home</a>
+            <a href="movies.php">Movies</a>
             <?php
             if ($_SESSION['user_role'] === USER::CINEMAOWNER)
                 echo '<a href="owner.php">Owner Panel</a> ';
@@ -64,7 +65,8 @@ else
                 echo '<a href="administration.php">Admin Panel</a>';
             ?>
         </div>
-        <form method="post" action="./index.php" class="fl-col">
+        <form id="logout-form" method="post" action="./index.php" class="fl-row">
+            <span id="username-span"><?php echo $_SESSION['user_username'] ?></span>
             <button type="submit" class="btn-primary">Logout</button>
         </form>
     </div>
@@ -92,7 +94,7 @@ else
 
                     <?php
 
-                    $users = User::getAllUsers();
+                    $users = User::GetAllUsers();
                     /* @var $user User (IDE type hint) */
                     foreach ($users as $user)
                     {
@@ -135,7 +137,7 @@ else
     function submitUser(uid)
     {
         this.event.stopPropagation();
-        fetch('async/edit_user.php', {
+        fetch('async/user_edit.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -163,7 +165,7 @@ else
     function deleteUser(uid)
     {
         this.event.stopPropagation();
-        fetch('async/delete_user.php', {
+        fetch('async/user_delete.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ 'user_id': uid})

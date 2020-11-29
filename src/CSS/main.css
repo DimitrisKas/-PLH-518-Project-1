@@ -9,12 +9,13 @@
     font-family: Roboto, Arial, Helvetica, sans-serif;
 }
 html {
-    height: 100%;
+    height: 100vh;
 }
 
 body {
-    height: 100vh;
     margin:0;
+    overflow-x:hidden;
+    width: 100vw;
     font-size:32px;
 }
 
@@ -32,13 +33,6 @@ input, label, span, p, li {
 
 /* --- Card --- */
 
-.card {
-    margin: 0.5em;
-    padding: 0.5em;
-    background: white;
-    border-radius: 5px;
-    box-shadow: rgba(10, 10, 10, 0.1) 1px 1px 10px 3px;
-}
 
 .fl-row {
     display:flex;
@@ -50,23 +44,32 @@ input, label, span, p, li {
     flex-direction: column;
 }
 .no-overflow {
-    overflow: hidden;
 }
 
 .main-content {
-    overflow: auto;
-    width: 100vw;
+    padding: 2em 0;
+    width: 100%;
 }
+
+.card {
+    margin: 1em;
+    padding: 0.5em;
+    background: white;
+    border-radius: 5px;
+    box-shadow: rgba(10, 10, 10, 0.1) 1px 1px 10px 3px;
+}
+
 
 /* --- Top Nav --- */
 .top-nav {
     display: flex;
-    position: inherit;
+    position: fixed;
+    width: 100vw;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 
-    padding: 10px 2em;
+    padding: 10px 0;
 
     color: white;
     background: #222;
@@ -76,6 +79,7 @@ input, label, span, p, li {
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-left: 1.8em;
 }
 
 #top-nav-title {
@@ -95,6 +99,17 @@ input, label, span, p, li {
 
 .top-nav a:hover {
     text-decoration-line: underline;
+}
+
+#logout-form {
+    margin-right: 1.8em;
+    align-items: center;
+}
+
+#username-span {
+    font-size: 0.6em;
+    color: white;
+    margin-right: 1em;
 }
 
 
@@ -216,4 +231,108 @@ select {
 
 .btn-danger:hover {
     background: rgba(220, 53, 69, .7);
+}
+
+
+/* Table design */
+
+.table-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+table {
+    font-size: 26px;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+tr {
+    border-left: rgba(var(--primaryColor), 0) solid 2px;
+    border-bottom: rgba(0, 0, 0, 0) solid 10px;
+}
+
+tr:hover {
+    background: rgba(var(--primaryColor), 0.2);
+    border-left: rgba(var(--primaryColor), 0.4) solid 2px;
+}
+
+tr:hover td:first-of-type, .highlighted-row td:first-of-type{
+    background: rgba(240,240,240, 1);
+}
+
+tr:first-of-type {
+    background: none;
+    border-left:none;
+}
+
+.no-hover-row, .no-hover-row:hover, .no-hover-row:hover td:first-of-type {
+    background: none;
+    border-left:none;
+}
+
+th {
+    text-align: left;
+    padding-left: 1em;
+}
+
+td{
+    padding: 0 0.5em;
+}
+
+td div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+table .btn-primary {
+    visibility: hidden;
+}
+
+table .highlighted-row .btn-primary {
+    visibility: visible;
+}
+table tr:hover .btn-primary {
+    visibility: visible;
+}
+
+table .no-hover-row .btn-primary {
+    visibility: visible;
+}
+
+table .btn-primary {
+    padding: 0.5em 0.6em;
+    margin: 0.5em;
+}
+
+table .custom-input, table .disabled-input {
+    width: 10em;
+}
+
+table .custom-input {
+    padding: 0.3em 0.3em;
+    box-shadow: rgba(205,205,205,0.4) inset 1px 1px 3px 3px;
+    transition: box-shadow 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+table .disabled-input {
+    padding: 0.3em 0.3em;
+    color: #666;
+    background: none;
+}
+
+table select{
+    padding: 0.3em 1em 0.3em 0.3em;
+    margin:0;
+}
+
+.action-td {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.title-row h5 {
+    border-top: rgba(50,50,50, 0.2) dashed 2px;
+    padding-top: 0.5em;
+    margin-bottom: 0.5em;
 }

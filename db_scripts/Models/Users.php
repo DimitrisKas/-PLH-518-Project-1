@@ -150,7 +150,6 @@ class User
         return  $success;
     }
 
-
     public static function EditUser($data):bool
     {
         logger("[USER_DB] Trying to edit user with id: " . $data['user_id']);
@@ -162,8 +161,7 @@ class User
 
         $sql_str = "UPDATE Users SET USERNAME=? , NAME=?, SURNAME=?, EMAIL=?, ROLE=?, CONFIRMED=? WHERE id=?";
         $stmt = $conn->prepare($sql_str);
-        if (!$stmt->bind_param("sssssis",$username, $name, $surname, $email, $role, $confirmed, $id))
-            logger('[USER_DB] Error while binding');
+        $stmt->bind_param("sssssis",$username, $name, $surname, $email, $role, $confirmed, $id);
 
         // Validate IsConfirmed:
         if ( !empty($data['user_confirmed']) && $data['user_confirmed'] === "true")
@@ -223,7 +221,7 @@ class User
         return  $success && $success_pass;
     }
 
-    public static function getAllUsers():array
+    public static function GetAllUsers():array
     {
         $conn = OpenCon(true);
 
@@ -240,6 +238,8 @@ class User
 
         $ret_array = array();
         while ($row = $result->fetch_assoc()) {
+
+            // Create object and append to return array
             $user = User::CreateExistingUserObj(
                 $row['ID'], $row['NAME'], $row['SURNAME'], $row['USERNAME'],
                 $row['PASSWORD'], $row['EMAIL'], $row['ROLE'] ,$row['CONFIRMED']);

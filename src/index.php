@@ -1,5 +1,5 @@
 <?php
-include_once('../db_scripts/Models/User.php');
+include_once('../db_scripts/Models/Users.php');
 include_once('../db_scripts/drop_db.php');
 include_once('../db_scripts/create_db.php');
 include_once('../db_scripts/create_tables.php');
@@ -41,7 +41,7 @@ function initDB()
         logger("Error adding user.");
     }
 
-    User::getAllUsers();
+    User::GetAllUsers();
 }
 
 //initDB();
