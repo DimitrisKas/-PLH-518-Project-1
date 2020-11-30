@@ -7,7 +7,7 @@ class Cinema
     public string $owner;
     public string $name;
 
-    const ID_PREFIX = "m";
+    const ID_PREFIX = "c";
 
     public function __construct($owner, $name)
     {
