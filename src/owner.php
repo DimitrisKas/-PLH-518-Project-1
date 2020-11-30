@@ -1,6 +1,7 @@
 <?php
 include_once '../db_scripts/Models/Users.php';
 include_once '../db_scripts/Models/Cinemas.php';
+include_once '../db_scripts/Models/Movies.php';
 include_once '../db_scripts/db_connection.php';
 include_once('../Utils/Random.php');
 include_once('../Utils/Logs.php');
@@ -90,9 +91,9 @@ else
 
                 <?php
 
-                $users = Cinema::GetAllOwnerCinemas($_SESSION['user_id']);
+                $cinemas = Cinema::GetAllOwnerCinemas($_SESSION['user_id']);
                 /* @var $cinema Cinema (IDE type hint) */
-                foreach ($users as $cinema)
+                foreach ($cinemas as $cinema)
                 {
                     ?>
                     <tr id="cinema_<?php echo $cinema->id?>">
@@ -133,51 +134,76 @@ else
             <table id="admin-table">
                 <tr>
                     <th>ID</th>
-                    <th>Username</th>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Password</th>
-                    <th>E-mail</th>
-                    <th>Role</th>
-                    <th>Confirmed</th>
+                    <th>Title</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Cinema Name</th>
+                    <th>Category</th>
                     <th></th>
                     <th></th>
                 </tr>
 
                 <?php
 
-                $users = User::GetAllUsers();
-                /* @var $user User (IDE type hint) */
-                foreach ($users as $user)
+                $movies = Movie::GetAllOwnerMovies($_SESSION['user_id']);
+                /* @var $movie Movie (IDE type hint) */
+                foreach ($movies as $movie)
                 {
                     ?>
-                    <tr id="user_<?php echo $user->id?>" onclick="toggleHighlight(this)">
-                        <td><div><input id="<?php echo $user->id?>_id"        type="text"  value="<?php echo $user->id?>"       class="disabled-input" disabled/></div></td>
-                        <td><div><input id="<?php echo $user->id?>_username"  type="text"  value="<?php echo $user->username?>" class="custom-input"/></div></td>
-                        <td><div><input id="<?php echo $user->id?>_name"      type="text"  value="<?php echo $user->name?>"     class="custom-input"/></div></td>
-                        <td><div><input id="<?php echo $user->id?>_surname"   type="text"  value="<?php echo $user->surname?>"  class="custom-input"/></div></td>
-                        <td><div><input id="<?php echo $user->id?>_password"  type="text"  value="" placeholder="Enter new password..." class="custom-input"/></div></td>
-                        <td><div><input id="<?php echo $user->id?>_email"     type="text"  value="<?php echo $user->email?>"    class="custom-input"/></div></td>
+                    <tr id="user_<?php echo $movie->id?>">
+                        <td><div><input id="<?php echo $movie->id?>_id"          type="text" value="<?php echo $movie->id?>"          class="disabled-input" disabled/></div></td>
+                        <td><div><input id="<?php echo $movie->id?>_title"       type="text" value="<?php echo $movie->title?>"       class="custom-input"/></div></td>
+                        <td><div><input id="<?php echo $movie->id?>_start_date"  type="text" value="<?php echo $movie->start_date?>"  class="custom-input"/></div></td>
+                        <td><div><input id="<?php echo $movie->id?>_end_date"    type="text" value="<?php echo $movie->end_date?>"    class="custom-input"/></div></td>
                         <td>
                             <div>
-                                <select id="<?php echo $user->id?>_role" name="role">
-                                    <option value="ADMIN" <?php echo $user->role === User::ADMIN ? "selected" : "" ?>>Admin</option>
-                                    <option value="CINEMAOWNER" <?php echo $user->role === User::CINEMAOWNER ? "selected" : "" ?>>Cinema Owner</option>
-                                    <option value="USER" <?php echo $user->role === User::USER ? "selected" : "" ?>>User</option>
+                                <select id="<?php echo $movie->id?>_cinema_name">
+                                    <?php
+                                        foreach($cinemas as $cinema)
+                                        {
+                                            echo '<option value="'.$cinema->name.'"' . (($movie->cinema_name === $cinema->name) ? "selected" : "") . '>' .$cinema->name.'</option>';
+                                        }
+                                    ?>
                                 </select>
                             </div>
                         </td>
-                        <td><div><input id="<?php echo $user->id?>_confirmed" type="checkbox" <?php echo $user->confirmed ? "checked" : ""?>/></div></td>
+                        <td><div><input id="<?php echo $movie->id?>_category"    type="text" value="<?php echo $movie->category?>"    class="custom-input"/></div></td>
                         <td class="action-td">
-                            <div><button id="<?php echo $user->id?>_submit" class="btn-primary btn-success" onclick="submitUser('<?php echo $user->id?>')" >Save</button></div>
+                            <div><button id="<?php echo $movie->id?>_submit" class="btn-primary btn-success" onclick="submitMovie('<?php echo $movie->id?>')" >Save</button></div>
                         </td>
                         <td class="action-td">
-                            <div><button id="<?php echo $user->id?>_delete" class="btn-primary btn-danger" onclick="deleteUser('<?php echo $user->id?>')" >Delete</button></div>
+                            <div><button id="<?php echo $movie->id?>_delete" class="btn-primary btn-danger" onclick="deleteMovie('<?php echo $movie->id?>')" >Delete</button></div>
                         </td>
                     </tr>
                     <?php
                 }
                 ?>
+                <tr class="no-hover-row title-row">
+                    <td><h5>Add new Movie</h5></td>
+                </tr>
+                <tr id="movie_new" class="no-hover-row">
+                    <td><div><input id="new_movie_id"           class="disabled-input" type="text"  value="Auto Generated" disabled/></div></td>
+                    <td><div><input id="new_movie_title"        class="custom-input"   type="text"  value=""  placeholder="Enter Movie Title"/></div></td>
+                    <td><div><input id="new_movie_start_date"   class="custom-input"   type="text"  value=""  placeholder="Enter Start Date"/></div></td>
+                    <td><div><input id="new_movie_end_date"     class="custom-input"   type="text"  value=""  placeholder="Enter End Date"/></div></td>
+                    <td>
+                        <div>
+                            <select id="new_movie_cinema_name">
+                                <option value="" disabled selected>Select a Cinema</option>
+                                <?php
+                                foreach($cinemas as $cinema)
+                                {
+                                    echo '<option value="'.$cinema->name.'">'.$cinema->name.'</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </td>
+                    <td><div><input id="new_movie_category"     class="custom-input"   type="text"  value=""  placeholder="Enter Category"/></div></td>
+                    <td class="action-td">
+                        <div><button id="new_movie_submit" class="btn-primary btn-success" onclick="addMovie()" >Add</button></div>
+                    </td>
+                </tr>
             </table>
         </div>
 
@@ -187,7 +213,6 @@ else
 <script type="text/javascript">
     function addCinema()
     {
-        this.event.stopPropagation();
         fetch('async/cinema_add.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -203,12 +228,10 @@ else
                     location.reload();
                 }
             });
-
     }
 
     function submitCinema(cinema_id)
     {
-        this.event.stopPropagation();
         fetch('async/cinema_edit.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -229,11 +252,80 @@ else
 
     function deleteCinema(cinema_id)
     {
-        this.event.stopPropagation();
         fetch('async/cinema_delete.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ 'cinema_id': cinema_id})
+        })
+            .then( response => {
+                return response.json();
+            })
+            .then( success =>{
+                if (success) {
+                    location.reload();
+                }
+            });
+    }
+
+    function addMovie()
+    {
+        // If no Cinema was selected:
+        let cinemaName = document.getElementById('new_movie_cinema_name').value
+
+        if (cinemaName === "")
+            cinemaName = "<?php echo $cinemas[0]->name ?>";
+
+        fetch('async/movie_add.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                'movie_title': document.getElementById('new_movie_title').value,
+                'movie_start_date': document.getElementById('new_movie_start_date').value,
+                'movie_end_date': document.getElementById('new_movie_end_date').value,
+                'movie_cinema_name': cinemaName,
+                'movie_category': document.getElementById('new_movie_category').value,
+            })
+        })
+            .then( response => {
+                return response.json();
+            })
+            .then( success =>{
+                if (success) {
+                    location.reload();
+                }
+            });
+    }
+
+    function submitMovie(movie_id)
+    {
+        fetch('async/movie_edit.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                'movie_id' :  document.getElementById(movie_id+'_id').value,
+                'movie_title': document.getElementById(movie_id+'_title').value,
+                'movie_start_date': document.getElementById(movie_id+'_start_date').value,
+                'movie_end_date': document.getElementById(movie_id+'_end_date').value,
+                'movie_cinema_name': document.getElementById(movie_id+'_cinema_name').value,
+                'movie_category': document.getElementById(movie_id+'_category').value,
+            })
+        })
+            .then( response => {
+                return response.json();
+            })
+            .then( success =>{
+                if (success) {
+                    location.reload();
+                }
+            });
+    }
+
+    function deleteMovie(movie_id)
+    {
+        fetch('async/movie_delete.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ 'movie_id': movie_id})
         })
             .then( response => {
                 return response.json();
