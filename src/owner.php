@@ -153,8 +153,8 @@ else
                     <tr id="user_<?php echo $movie->id?>">
                         <td><div><input id="<?php echo $movie->id?>_id"          type="text" value="<?php echo $movie->id?>"          class="disabled-input" disabled/></div></td>
                         <td><div><input id="<?php echo $movie->id?>_title"       type="text" value="<?php echo $movie->title?>"       class="custom-input"/></div></td>
-                        <td><div><input id="<?php echo $movie->id?>_start_date"  type="text" value="<?php echo $movie->start_date?>"  class="custom-input"/></div></td>
-                        <td><div><input id="<?php echo $movie->id?>_end_date"    type="text" value="<?php echo $movie->end_date?>"    class="custom-input"/></div></td>
+                        <td><div><input id="<?php echo $movie->id?>_start_date"  type="date"  min="1997-01-01" max="2030-12-31" value="<?php echo $movie->start_date?>"  class="custom-input"/></div></td>
+                        <td><div><input id="<?php echo $movie->id?>_end_date"    type="date"  min="1997-01-01" max="2030-12-31" value="<?php echo $movie->end_date?>"    class="custom-input"/></div></td>
                         <td>
                             <div>
                                 <select id="<?php echo $movie->id?>_cinema_name">
@@ -184,8 +184,8 @@ else
                 <tr id="movie_new" class="no-hover-row">
                     <td><div><input id="new_movie_id"           class="disabled-input" type="text"  value="Auto Generated" disabled/></div></td>
                     <td><div><input id="new_movie_title"        class="custom-input"   type="text"  value=""  placeholder="Enter Movie Title"/></div></td>
-                    <td><div><input id="new_movie_start_date"   class="custom-input"   type="text"  value=""  placeholder="Enter Start Date"/></div></td>
-                    <td><div><input id="new_movie_end_date"     class="custom-input"   type="text"  value=""  placeholder="Enter End Date"/></div></td>
+                    <td><div><input id="new_movie_start_date"   class="custom-input"   type="date"  min="1997-01-01" max="2030-12-31"  value=""  placeholder="Enter Start Date"/></div></td>
+                    <td><div><input id="new_movie_end_date"     class="custom-input"   type="date"  min="1997-01-01" max="2030-12-31"  value=""  placeholder="Enter End Date"/></div></td>
                     <td>
                         <div>
                             <select id="new_movie_cinema_name">
@@ -269,19 +269,37 @@ else
 
     function addMovie()
     {
-        // If no Cinema was selected:
+        // Check if no Cinema was selected:
         let cinemaName = document.getElementById('new_movie_cinema_name').value
 
         if (cinemaName === "")
             cinemaName = "<?php echo $cinemas[0]->name ?>";
 
+        // Check if no date was given.
+        let startDate = document.getElementById('new_movie_start_date').value;
+        let endDate = document.getElementById('new_movie_end_date').value;
+
+        // Get current date, plus the date in 7 days
+        let today = new Date();
+        let in7days = new Date(today.getTime() +  7 * 24 * 60 * 60 * 1000);
+
+        if (startDate === "")
+            startDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
+        if (endDate === "")
+            endDate = in7days.getFullYear()+'-'+(in7days.getMonth()+1)+'-'+in7days.getDate();
+
+        console.log(startDate); console.log(endDate);
+        alert()
+
+        // Initiate the request
         fetch('async/movie_add.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 'movie_title': document.getElementById('new_movie_title').value,
-                'movie_start_date': document.getElementById('new_movie_start_date').value,
-                'movie_end_date': document.getElementById('new_movie_end_date').value,
+                'movie_start_date': startDate,
+                'movie_end_date': endDate,
                 'movie_cinema_name': cinemaName,
                 'movie_category': document.getElementById('new_movie_category').value,
             })
