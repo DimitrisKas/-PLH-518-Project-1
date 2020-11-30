@@ -25,7 +25,7 @@ function createTables()
 
     $sql_str = "CREATE TABLE Movies(
         ID VARCHAR(10) NOT NULL PRIMARY KEY,
-        TITLE VARCHAR(20) NOT NULL,
+        TITLE VARCHAR(50) NOT NULL,
         STARTDATE DATE,
         ENDDATE DATE, 
         CINEMANAME VARCHAR(20),
