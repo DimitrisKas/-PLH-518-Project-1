@@ -10,6 +10,7 @@ class Movie
     public string $end_date;
     public string $cinema_name;
     public string $category;
+    public bool $favorite = false;
 
     const ID_PREFIX = "m";
 
@@ -144,10 +145,18 @@ class Movie
         return $success;
     }
 
+    public static function AddToFavorites(string $movie_id, string $user_id)
+    {
+
+    }
+
     public static function GetAllMovies():array {
         $conn = OpenCon(true);
 
-        $sql_str = "SELECT * FROM Movies";
+        $sql_str = "SELECT m.ID as m_ID,  m.TITLE, m.STARTDATE, m.ENDDATE, m.CINEMANAME, m.CATEGORY, f.ID as f_ID 
+                    FROM movies m 
+                        LEFT JOIN favorites f ON f.USERID = 'u958215285' AND f.MOVIEID = m.ID;";
+
         $stmt = $conn->prepare($sql_str);
 
         if (!$stmt->execute())
@@ -163,8 +172,68 @@ class Movie
 
             // Create object and append to return array
             $movie = Movie::CreateExistingMovieObj(
-                $row['ID'], $row['TITLE'], $row['STARTDATE'], $row['ENDATE'],
+                $row['m_ID'], $row['TITLE'], $row['STARTDATE'], $row['ENDDATE'],
                 $row['CINEMANAME'], $row['CATEGORY']);
+
+            $movie->favorite = isset($row['f_ID']);
+            logger( "Is favorite: " . $movie->favorite);
+            logger( "Is favorite row:: " . $row['f_ID']);
+            $ret_array[] = $movie;
+        }
+
+        $stmt->free_result();
+        $stmt->close();
+
+        CloseCon($conn);
+
+        return $ret_array;
+    }
+
+    public static function Search($title, $date, $cinema_name, $category):array
+    {
+        $conn = OpenCon(true);
+
+        // Validate search input
+        if (empty($title))
+            $title = "%";
+
+        if (empty($cinema_name))
+            $cinema_name = "%";
+
+        if (empty($category))
+            $category = "%";
+
+        $doDateSearch = true;
+        if (empty($date))
+        {
+            $date = "0000-00-00";
+            $doDateSearch = false;
+        }
+
+        $sql_str = "SELECT m.ID as m_ID,  m.TITLE, m.STARTDATE, m.ENDDATE, m.CINEMANAME, m.CATEGORY, f.ID as f_ID 
+                    FROM movies m 
+                        LEFT JOIN favorites f ON f.USERID = 'u958215285' AND f.MOVIEID = m.ID
+                    WHERE m.TITLE LIKE ? AND m.CINEMANAME LIKE ? AND m.CATEGORY LIKE ? AND ( ?=FALSE OR  DATEDIFF(m.STARTDATE, ?) >= 0 AND  DATEDIFF(m.ENDDATE, ?) <=0);";
+        $stmt = $conn->prepare($sql_str);
+        $stmt->bind_param("sssiss", $title, $cinema_name, $category, $doDateSearch, $date, $date);
+
+        if (!$stmt->execute())
+            logger("Get all movies failed " . $stmt->error);
+
+        $result = $stmt->get_result();
+
+        $num_of_rows = $result->num_rows;
+        logger("Found " . $num_of_rows . " movies.");
+
+        $ret_array = array();
+        while ($row = $result->fetch_assoc()) {
+
+            // Create object and append to return array
+            $movie = Movie::CreateExistingMovieObj(
+                $row['m_ID'], $row['TITLE'], $row['STARTDATE'], $row['ENDDATE'],
+                $row['CINEMANAME'], $row['CATEGORY']);
+
+            $movie->favorite = isset($row['f_ID']);
             $ret_array[] = $movie;
         }
 

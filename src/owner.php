@@ -289,9 +289,6 @@ else
         if (endDate === "")
             endDate = in7days.getFullYear()+'-'+(in7days.getMonth()+1)+'-'+in7days.getDate();
 
-        console.log(startDate); console.log(endDate);
-        alert()
-
         // Initiate the request
         fetch('async/movie_add.php', {
             method: 'POST',

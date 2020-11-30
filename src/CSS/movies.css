@@ -1,0 +1,32 @@
+#movies_content
+
+#movies_content table th:first-of-type {
+    padding-right: 0.5em;
+}
+
+#movies_content th {
+    padding-left: 1em;
+    padding-right: 2em;
+}
+
+#movies_content td {
+    padding: 0 1em;
+}
+
+#movies_content td div{
+    justify-content: flex-start;
+}
+
+.td-movie-title span {
+    width: 20em;
+}
+
+.search-cont {
+    margin-top: 2em;
+}
+.search-cont .custom-input{
+    padding: 0.5em 0.5em;
+}
+.search-cont .btn-primary {
+    padding: 0.5em 0.5em;
+}
