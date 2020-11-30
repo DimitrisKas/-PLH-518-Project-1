@@ -51,9 +51,24 @@ $f_text  = "";
 $isSigningUp = false;
 
 session_start();
-$_SESSION['login'] = false;
+
+// Check if logging out
+if (isset($_GET['logout']))
+    $_SESSION['login'] = false;
+else if (isset($_SESSION['login']) && $_SESSION['login'] === true)
+{
+    // Redirecting to Welcome page
+    ?>
+    <form id="toIndex" action="./welcome.php" method="post"></form>
+    <script type="text/javascript">
+        document.getElementById("toIndex").submit();
+    </script>
+    <?php
+}
 
 
+
+// Check Feedback Box
 if (!empty($_POST['feedback']) && $_POST['feedback'] === "true")
 {
     logger("Got feedback!");

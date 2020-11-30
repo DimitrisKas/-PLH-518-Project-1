@@ -113,6 +113,23 @@ class User
             return true;
     }
 
+    public function checkIfUniqueUsername():bool
+    {
+        $conn = OpenCon(true);
+
+        $sql_str = "SELECT ID FROM Users WHERE username=?";
+        $stmt = $conn->prepare($sql_str);
+        $stmt->bind_param("s",$this->username);
+
+        if (!$stmt->execute())
+            logger("[USER_DB] Check Username failed " . $stmt->error);
+
+        if ($stmt->affected_rows === 1)
+            return false;
+        else
+            return true;
+    }
+
     // static functions
     public static function CreateExistingUserObj($id, $name, $surname, $username, $password, $email, $role, $confirmed):User
     {

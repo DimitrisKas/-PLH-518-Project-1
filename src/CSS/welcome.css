@@ -13,6 +13,15 @@
     background: #fdfdfd;
 }
 
+#welcome-options h3 {
+    margin-bottom: 0.5em;
+}
+
+#welcome-options hr {
+    width: 90%;
+    max-width: 24em;
+}
+
 .welcome-option {
     width: 90%;
     max-width: 20em;

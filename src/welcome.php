@@ -111,7 +111,7 @@ else
                     echo '<a href="administration.php">Admin Panel</a>';
             ?>
         </div>
-        <form id="logout-form" method="post" action="./index.php" class="fl-row">
+        <form id="logout-form" method="post" action="./index.php?logout" class="fl-row">
             <span id="username-span"><?php echo $_SESSION['user_username'] ?></span>
             <button type="submit" class="btn-primary">Logout</button>
         </form>
@@ -121,6 +121,8 @@ else
     <div class="main-content">
 
         <div id="welcome-options">
+            <h3>Welcome back, <?php echo $_SESSION['user_username']?>.</h3>
+            <hr/>
             <div class="card welcome-option" onclick="location.href='movies.php';">
                 <h5>Browse Movies</h5>
                 <p>View a list of all available Movies</p>
