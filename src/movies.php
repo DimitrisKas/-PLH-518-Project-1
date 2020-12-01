@@ -91,11 +91,11 @@ else
                 <?php
                 if (isset($_GET['search']))
                 {
-                    $movies = Movie::Search($_GET['title'], $_GET['date'], $_GET['cin_name'], $_GET['cat']);
+                    $movies = Movie::Search($_SESSION['user_id'], $_GET['title'], $_GET['date'], $_GET['cin_name'], $_GET['cat']);
                 }
                 else
                 {
-                    $movies = Movie::GetAllMovies();
+                    $movies = Movie::GetAllMovies($_SESSION['user_id']);
                 }
                 /* @var $movie Movie (IDE type hint) */
                 foreach ($movies as $movie)

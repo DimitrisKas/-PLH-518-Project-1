@@ -41,8 +41,8 @@ function createTables()
         ID VARCHAR(10) NOT NULL PRIMARY KEY,
         USERID  VARCHAR(10) NOT NULL,
         MOVIEID  VARCHAR(10) NOT NULL,
-        FOREIGN KEY (USERID) REFERENCES Users(ID),
-        FOREIGN KEY (MOVIEID) REFERENCES Movies(ID)
+        FOREIGN KEY (USERID) REFERENCES Users(ID) ON DELETE CASCADE,
+        FOREIGN KEY (MOVIEID) REFERENCES Movies(ID) ON DELETE CASCADE,
     )";
     if ($conn->query($sql_str) === TRUE) {
         logger("Table \"Favorites\" created!");

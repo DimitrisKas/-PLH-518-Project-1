@@ -150,14 +150,15 @@ class Movie
 
     }
 
-    public static function GetAllMovies():array {
+    public static function GetAllMovies($current_user_id):array {
         $conn = OpenCon(true);
 
         $sql_str = "SELECT m.ID as m_ID,  m.TITLE, m.STARTDATE, m.ENDDATE, m.CINEMANAME, m.CATEGORY, f.ID as f_ID 
                     FROM movies m 
-                        LEFT JOIN favorites f ON f.USERID = 'u958215285' AND f.MOVIEID = m.ID;";
+                        LEFT JOIN favorites f ON f.USERID = ? AND f.MOVIEID = m.ID;";
 
         $stmt = $conn->prepare($sql_str);
+        $stmt->bind_param("s", $current_user_id,);
 
         if (!$stmt->execute())
             logger("Get all movies failed " . $stmt->error);
@@ -176,8 +177,6 @@ class Movie
                 $row['CINEMANAME'], $row['CATEGORY']);
 
             $movie->favorite = isset($row['f_ID']);
-            logger( "Is favorite: " . $movie->favorite);
-            logger( "Is favorite row:: " . $row['f_ID']);
             $ret_array[] = $movie;
         }
 
@@ -189,19 +188,25 @@ class Movie
         return $ret_array;
     }
 
-    public static function Search($title, $date, $cinema_name, $category):array
+    public static function Search($current_user_id, $title, $date, $cinema_name, $category):array
     {
         $conn = OpenCon(true);
 
         // Validate search input
         if (empty($title))
             $title = "%";
+        else
+            $title = "%".$title."%";
 
         if (empty($cinema_name))
             $cinema_name = "%";
+        else
+            $cinema_name = "%".$cinema_name."%";
 
         if (empty($category))
             $category = "%";
+        else
+            $category = "%".$category."%";
 
         $doDateSearch = true;
         if (empty($date))
@@ -210,12 +215,15 @@ class Movie
             $doDateSearch = false;
         }
 
+        logger("Date: " . $date);
+        logger("doDateSearch: " . $doDateSearch);
+
         $sql_str = "SELECT m.ID as m_ID,  m.TITLE, m.STARTDATE, m.ENDDATE, m.CINEMANAME, m.CATEGORY, f.ID as f_ID 
                     FROM movies m 
-                        LEFT JOIN favorites f ON f.USERID = 'u958215285' AND f.MOVIEID = m.ID
-                    WHERE m.TITLE LIKE ? AND m.CINEMANAME LIKE ? AND m.CATEGORY LIKE ? AND ( ?=FALSE OR  DATEDIFF(m.STARTDATE, ?) >= 0 AND  DATEDIFF(m.ENDDATE, ?) <=0);";
+                        LEFT JOIN favorites f ON f.USERID = ? AND f.MOVIEID = m.ID
+                    WHERE m.TITLE LIKE ? AND m.CINEMANAME LIKE ? AND m.CATEGORY LIKE ? AND ( ?=FALSE OR  (DATEDIFF(m.STARTDATE, ?) >= 0 AND  DATEDIFF(?, m.ENDDATE) >= 0));";
         $stmt = $conn->prepare($sql_str);
-        $stmt->bind_param("sssiss", $title, $cinema_name, $category, $doDateSearch, $date, $date);
+        $stmt->bind_param("ssssiss", $current_user_id, $title, $cinema_name, $category, $doDateSearch, $date, $date);
 
         if (!$stmt->execute())
             logger("Get all movies failed " . $stmt->error);

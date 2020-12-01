@@ -17,6 +17,10 @@
     justify-content: flex-start;
 }
 
+#movies_content td:first-of-type div{
+    justify-content: center;
+}
+
 .td-movie-title span {
     width: 20em;
 }
